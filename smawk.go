@@ -16,13 +16,13 @@ func main() {
 
     log.Printf("Authorized on account %s", bot.Self.UserName)
 
-    _, err = bot.SetWebhook(tgbotapi.NewWebhook("https://mysimplethings.xyz:8443/309LKj2390gklj1LJF2"))
+    _, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert("https://mysimplethings.xyz:8443/309LKj2390gklj1LJF2", "smawk_cert.pem"))
     if err != nil {
         log.Fatal(err)
     }
 
     updates := bot.ListenForWebhook("/309LKj2390gklj1LJF2")
-    go http.ListenAndServeTLS("0.0.0.0:8443", "/etc/apache2/ssl/mst.pem", "/etc/apache2/ssl/mst.key", nil)
+    go http.ListenAndServeTLS("0.0.0.0:8443", "smawk_cert.pem", "smawk_key.pem", nil)
 
     for update := range updates {
         log.Printf("%+v\n", update)
