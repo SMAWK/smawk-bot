@@ -16,7 +16,7 @@ func main() {
 
     log.Printf("Authorized on account %s", bot.Self.UserName)
 
-    _, err = bot.SetWebhook(tgbotapi.NewWebhook("https://mysimplethings.xyz:8443/" + bot.Token))
+    _, err = bot.SetWebhook(tgbotapi.NewWebhook("https://mysimplethings.xyz:8443/309LKj2390gklj1LJF2"))
     if err != nil {
         log.Fatal(err)
     }
