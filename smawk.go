@@ -21,8 +21,8 @@ func main() {
         log.Fatal(err)
     }
 
-    updates := bot.ListenForWebhook("/" + bot.Token)
-    go http.ListenAndServeTLS("0.0.0.0:8443", "cert.pem", "key.pem", nil)
+    updates := bot.ListenForWebhook("/309LKj2390gklj1LJF2")
+    go http.ListenAndServeTLS("0.0.0.0:8443", "/etc/apache2/ssl/mst.pem", "/etc/apache2/ssl/mst.key", nil)
 
     for update := range updates {
         log.Printf("%+v\n", update)
