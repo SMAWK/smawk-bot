@@ -25,6 +25,6 @@ func main() {
     go http.ListenAndServeTLS("0.0.0.0:8443", "smawk_cert.pem", "smawk_key.pem", nil)
 
     for update := range updates {
-        log.Printf("%+v\n", update)
+        log.Printf("%+v\n", bot.GetMe())
     }
 }
