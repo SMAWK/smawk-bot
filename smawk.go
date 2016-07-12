@@ -1,4 +1,4 @@
-package main
+package smawk
 
 import (
     "gopkg.in/telegram-bot-api.v4"
