@@ -4,6 +4,7 @@ import (
 	"encoding/json"
     "gopkg.in/telegram-bot-api.v4"
     "log"
+    "strconv"
 	"testing"
 )
 
@@ -34,7 +35,7 @@ func getBot(t *testing.T) (*tgbotapi.BotAPI, error) {
 
 // generateUpdate is a helper function that generates a test update
 // (see Update sruct in tgbotapi/types)
-func generateUpdate(t *testing.T) (tgbotapi.Update, error) {
+func generateUpdate(t *testing.T, cmd string) (tgbotapi.Update, error) {
 	// Create our Update Var
 	var upd tgbotapi.Update
 
@@ -57,11 +58,11 @@ func generateUpdate(t *testing.T) (tgbotapi.Update, error) {
 				"type":"private"
 			},
 			"date":1468013062,
-			"text":"\/hello",
+			"text":"`+cmd+`",
 			"entities":[{
 				"type":"bot_command",
 				"offset":0,
-				"length":6
+				"length":`+strconv.Itoa(len(cmd))+`
 			}]
 		}
 	}`)
@@ -117,7 +118,7 @@ func TestParseHello(t *testing.T) {
 	bot, _ := getBot(t)
 
 	// Generate our update using the helper function
-	upd, _  := generateUpdate(t)
+	upd, _  := generateUpdate(t,"/hello")
 
 	// Check our Message to ensure text is fine
 	if (upd.Message.Text == "/hello") {
@@ -132,7 +133,7 @@ func TestParseHello(t *testing.T) {
 		}
 
 		// Otherwise, log to the console that the message was sent
-		log.Printf("Hello command")
+		log.Printf("/hello command test success")
 	} else {
 		log.Fatalf("generateUpdate fail: Expected /hello. Received %v", upd.Message.Text)
 		t.FailNow()
