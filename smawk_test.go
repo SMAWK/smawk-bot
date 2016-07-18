@@ -75,6 +75,16 @@ func generateUpdate(t *testing.T, cmd string) (tgbotapi.Update, error) {
 }
 
 /* ================================================ */
+/* 				 	Command functions 				*/
+/* ================================================ */
+
+// ExecHelloCommand handles the return of the /hello{@smawk-bot}
+// command.
+func ExecHelloCommand(upd tgbotapi.Update) {
+
+}
+
+/* ================================================ */
 /* 				 	Testing functions 				*/
 /* ================================================ */
 

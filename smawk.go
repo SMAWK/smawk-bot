@@ -25,6 +25,20 @@ func main() {
     go http.ListenAndServeTLS("0.0.0.0:8443", "smawk_cert.pem", "smawk_key.pem", nil)
 
     for update := range updates {
-        log.Printf("%+v\n", update.Message)
+        cmd := update.Message.Text
+        if (cmd == "/hello" || cmd == "/hello@smawk_bot") {
+
+        } else if (cmd == "/hello" || cmd == "/hello@smawk_bot") {
+
+        }
     }
+}
+
+func ExecStartCommand() {
+
+}
+
+func ExecHelloCommand(bot tgbotapi.BotAPI, upd tgbotapi.Update) {
+    msg := tgbotapi.NewMessage(upd.Message.Chat.ID, "Hello, @" + upd.Message.From.UserName + "!")
+    bot.Send(msg)
 }
