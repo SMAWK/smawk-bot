@@ -27,10 +27,10 @@ func main() {
     for update := range updates {
         cmd := update.Message.Text
         if (cmd == "/start" || cmd == "/start@smawk_bot") {
-            msg := tgbotapi.NewMessage(upd.Message.Chat.ID, "Lo, the official SMÄWKBot rises!")
+            msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Lo, the official SMÄWKBot rises!")
             bot.Send(msg)
         } else if (cmd == "/hello" || cmd == "/hello@smawk_bot") {
-            msg := tgbotapi.NewMessage(upd.Message.Chat.ID, "Hello, @" + upd.Message.From.UserName + "!")
+            msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Hello, @" + update.Message.From.UserName + "!")
             bot.Send(msg)
         }
     }
