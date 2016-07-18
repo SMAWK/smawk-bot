@@ -2,12 +2,13 @@ package main_test
 
 import (
 	"encoding/json"
-    "gopkg.in/telegram-bot-api.v4"
-    "log"
-    "strconv"
+	"gopkg.in/telegram-bot-api.v4"
+	"log"
+	"strconv"
 	"testing"
 )
 
+// Create our constants for use throughout the testing functions
 const (
 	SMAWKToken              = "249930361:AAHz1Gksb-eT0SQG47lDb7WbJxujr7kGCkU"
 	ChatID                 	= 55997207
@@ -113,6 +114,7 @@ func TestSendMessage(t *testing.T) {
 	log.Printf("Test message sent")
 }
 
+// TestParseHello emulates the /hello{@smawk_bot} command and responds as it does in production
 func TestParseHello(t *testing.T) {
 	// Fetch our bot using the helper function
 	bot, _ := getBot(t)
