@@ -26,10 +26,10 @@ func main() {
 
     for update := range updates {
         cmd := update.Message.Text
-        if (cmd == "/hello" || cmd == "/hello@smawk_bot") {
+        if (cmd == "/start" || cmd == "/start@smawk_bot") {
 
         } else if (cmd == "/hello" || cmd == "/hello@smawk_bot") {
-
+            ExecHelloCommand(bot,update)
         }
     }
 }
@@ -38,7 +38,7 @@ func ExecStartCommand() {
 
 }
 
-func ExecHelloCommand(bot tgbotapi.BotAPI, upd tgbotapi.Update) {
+func ExecHelloCommand(bot *tgbotapi.BotAPI, upd tgbotapi.Update) {
     msg := tgbotapi.NewMessage(upd.Message.Chat.ID, "Hello, @" + upd.Message.From.UserName + "!")
     bot.Send(msg)
 }
