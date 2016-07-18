@@ -27,18 +27,11 @@ func main() {
     for update := range updates {
         cmd := update.Message.Text
         if (cmd == "/start" || cmd == "/start@smawk_bot") {
-
+            msg := tgbotapi.NewMessage(upd.Message.Chat.ID, "Lo, the official SMÄWKBot rises!")
+            bot.Send(msg)
         } else if (cmd == "/hello" || cmd == "/hello@smawk_bot") {
-            ExecHelloCommand(bot,update)
+            msg := tgbotapi.NewMessage(upd.Message.Chat.ID, "Hello, @" + upd.Message.From.UserName + "!")
+            bot.Send(msg)
         }
     }
-}
-
-func ExecStartCommand() {
-
-}
-
-func ExecHelloCommand(bot *tgbotapi.BotAPI, upd tgbotapi.Update) {
-    msg := tgbotapi.NewMessage(upd.Message.Chat.ID, "Hello, @" + upd.Message.From.UserName + "!")
-    bot.Send(msg)
 }
