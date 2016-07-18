@@ -14,7 +14,7 @@ const (
 )
 
 /* ================================================ */
-/* 				 	Helper functions 				*/
+/*                 Helper functions                 */
 /* ================================================ */
 
 // getBot is a helper function that returns the bot object
@@ -75,17 +75,7 @@ func generateUpdate(t *testing.T, cmd string) (tgbotapi.Update, error) {
 }
 
 /* ================================================ */
-/* 				 	Command functions 				*/
-/* ================================================ */
-
-// ExecHelloCommand handles the return of the /hello{@smawk-bot}
-// command.
-func ExecHelloCommand(upd tgbotapi.Update) {
-
-}
-
-/* ================================================ */
-/* 				 	Testing functions 				*/
+/*                Testing functions                 */
 /* ================================================ */
 
 // TestLoadBot tests to see if the bot is loading and authenticated properly
