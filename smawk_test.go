@@ -1,4 +1,4 @@
-package main_test
+package smawk_test
 
 import (
 	"encoding/json"
