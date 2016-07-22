@@ -38,3 +38,7 @@ For more info about testing, see the official Golang docs [here](https://golang.
 
 # Future Happenings
 Currently, SMÄWKBot acts as a Go program (i.e., it's in the `package main`). In the near future, this repo will be converted into a library that can be plugged into other packages; this change will allow everyone to launch their own bots (if they wish)
+
+# To-Do
+- Handle Webhooks Without Cert
+- Handle Non-webhook update fetching
