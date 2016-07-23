@@ -5,6 +5,9 @@ import (
     "log"
     "encoding/json"
     "strconv"
+    "os/exec"
+    "bytes"
+    "fmt"
 )
 
 // BotAPI allows you to interact with the Telegram Bot API.
@@ -84,7 +87,7 @@ func (bot *SmawkBot) ExecuteHelloCommand(update tgbotapi.Update) {
 }
 
 /* ================================================ */
-/*                Testing functions                 */
+/*                 Helper functions                 */
 /* ================================================ */
 
 // GenerateUpdate is a helper function that generates a test update
@@ -127,4 +130,22 @@ func (bot *SmawkBot) GenerateUpdate(cmd string) (tgbotapi.Update, error) {
 
     // Return our update
     return upd, nil
+}
+
+// GenerateCertificate is used to create a self signed certificate for use with any
+// instance of the bot
+func GenerateCertificate(c string, st string, ct string, org string, dom string, key string, cert string) {
+    // Generate our string for the certificate
+    certstring := "\"/C="+c+"/ST="+st+"/L="+ct+"/O="+org+"/CN="+dom+"\""
+
+    cmdname := "openssl"
+    cmdargs := []string{"req","-newkey","rsa:2048","-sha256","-nodes","-keyout",key,"-x509","-days","365","-out",cert,"-subj","/"+certstring}
+
+    cmd := exec.Command(cmdname,cmdargs...)
+    var stderr bytes.Buffer
+    cmd.Stderr = &stderr
+    err := cmd.Run()
+    if err != nil {
+        fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+    }
 }
