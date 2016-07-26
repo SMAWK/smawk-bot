@@ -69,6 +69,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
         bot.ExecuteStartCommand(update)
     } else if (cmd == "/hello" || cmd == "/hello@smawk_bot") {
         bot.ExecuteHelloCommand(update)
+    } else if (cmd == "/hype" || cmd == "/hype@smawk_bot") {
+        bot.ExecuteHelloCommand(update)
     }
 }
 
@@ -83,6 +85,11 @@ func (bot *SmawkBot) ExecuteStartCommand(update tgbotapi.Update) {
 
 func (bot *SmawkBot) ExecuteHelloCommand(update tgbotapi.Update) {
     msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Hello, @" + update.Message.From.UserName + "!")
+    bot.API.Send(msg)
+}
+
+func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
+    msg := tgbotapi.NewMessage(update.Message.Chat.ID, "HYPE!")
     bot.API.Send(msg)
 }
 
