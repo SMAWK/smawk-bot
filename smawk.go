@@ -89,8 +89,8 @@ func (bot *SmawkBot) ExecuteHelloCommand(update tgbotapi.Update) {
 }
 
 func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
-    msg := tgbotapi.NewMessage(update.Message.Chat.ID, "HYPE!")
-    bot.API.Send(msg)
+    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
+    bot.API.Send(doc)
 }
 
 /* ================================================ */
