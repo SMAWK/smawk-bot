@@ -70,7 +70,7 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
     } else if (cmd == "/hello" || cmd == "/hello@smawk_bot") {
         bot.ExecuteHelloCommand(update)
     } else if (cmd == "/hype" || cmd == "/hype@smawk_bot") {
-        bot.ExecuteHelloCommand(update)
+        bot.ExecuteHypeCommand(update)
     }
 }
 
