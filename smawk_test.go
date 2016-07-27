@@ -114,30 +114,14 @@ func TestSendMessage(t *testing.T) {
 	log.Printf("Test message sent")
 }
 
-// TestParseHello emulates the /hello{@smawk_bot} command and responds as it does in production
-func TestParseHello(t *testing.T) {
+// TestIDCommand tests to make sure that the bot will properly send an
+// ID to a private chat while refusing to send to a public chat
+func TestIDCommand(t *testing.T) {
 	// Fetch our bot using the helper function
 	bot, _ := getBot(t)
 
-	// Generate our update using the helper function
-	upd, _  := generateUpdate(t,"/hello")
+	update, _ := generateUpdate(t,"/id")
 
-	// Check our Message to ensure text is fine
-	if (upd.Message.Text == "/hello") {
-		// Generate our message to send back
-		msg := tgbotapi.NewMessage(upd.Message.Chat.ID, "Hello, @" + upd.Message.From.UserName + "!")
-		_, err := bot.Send(msg)
-
-		// Check to see if something bad happened and break if need be
-		if err != nil {
-			log.Fatal(err)
-			t.FailNow()
-		}
-
-		// Otherwise, log to the console that the message was sent
-		log.Printf("/hello command test success")
-	} else {
-		log.Fatalf("generateUpdate fail: Expected /hello. Received %v", upd.Message.Text)
-		t.FailNow()
-	}
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Your chat ID is: "+strconv.FormatInt(update.Message.Chat.ID,10))
+    bot.Send(msg)
 }

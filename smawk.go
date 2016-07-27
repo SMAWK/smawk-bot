@@ -68,8 +68,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
     cmd := update.Message.Text
     if (cmd == "/start" || cmd == "/start@smawk_bot") {
         bot.ExecuteStartCommand(update)
-    } else if (cmd == "/hello" || cmd == "/hello@smawk_bot") {
-        bot.ExecuteHelloCommand(update)
+    } else if (cmd == "/id" || cmd == "/id@smawk_bot") {
+        bot.ExecuteIDCommand(update)
     } else if (cmd == "/hype" || cmd == "/hype@smawk_bot") {
         bot.ExecuteHypeCommand(update)
     }
@@ -84,9 +84,11 @@ func (bot *SmawkBot) ExecuteStartCommand(update tgbotapi.Update) {
     bot.API.Send(msg)
 }
 
-func (bot *SmawkBot) ExecuteHelloCommand(update tgbotapi.Update) {
-    msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Hello, @" + update.Message.From.UserName + "!")
-    bot.API.Send(msg)
+func (bot *SmawkBot) ExecuteIDCommand(update tgbotapi.Update) {
+    if update.Message.Chat.Type == "private" {
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Your chat ID is: "+strconv.FormatInt(update.Message.Chat.ID,10))
+        bot.API.Send(msg)
+    }
 }
 
 func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
