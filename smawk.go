@@ -1,14 +1,14 @@
 package smawk
 
 import (
+    "bytes"
+    "encoding/json"
+    "fmt"
     "gopkg.in/telegram-bot-api.v4"
     "log"
-    "encoding/json"
-    "strconv"
-    "os/exec"
-    "bytes"
-    "fmt"
     "os"
+    "os/exec"
+    "strconv"
 )
 
 // BotAPI allows you to interact with the Telegram Bot API.
@@ -94,8 +94,8 @@ func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
     if _, err := os.Stat("hype.gif"); os.IsNotExist(err) {
         // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
         // Fetch it from the SMAWK source
-        cmdname := "cp"
-        cmdargs := []string{"$GOPATH/src/github.com/SMAWK/smawk-bot/hype.gif","."}
+        cmdname := "curl"
+        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/hype.gif"}
 
         cmd := exec.Command(cmdname,cmdargs...)
         var stderr bytes.Buffer
