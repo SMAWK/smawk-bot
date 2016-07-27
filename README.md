@@ -84,4 +84,4 @@ For more info about testing, see the official Golang docs [here](https://golang.
 - Handle Non-webhook update fetching
 
 #Changelog
-Changelog can be viewed [here](./CHANGELOG.md)
+Changelog can be viewed [here](CHANGELOG.md)
