@@ -95,7 +95,6 @@ func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
         // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, "No gif in my working directory :(")
         bot.API.Send(msg)
-        break;
     }
 
     doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
