@@ -93,8 +93,17 @@ func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
     // Make sure that we have the hype command in our working directory
     if _, err := os.Stat("hype.gif"); os.IsNotExist(err) {
         // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
-        msg := tgbotapi.NewMessage(update.Message.Chat.ID, "No gif in my working directory :(")
-        bot.API.Send(msg)
+        // Fetch it from the SMAWK source
+        cmdname := "cp"
+        cmdargs := []string{"$GOPATH/src/github.com/SMAWK/smawk-bot/hype.gif","."}
+
+        cmd := exec.Command(cmdname,cmdargs...)
+        var stderr bytes.Buffer
+        cmd.Stderr = &stderr
+        err := cmd.Run()
+        if err != nil {
+            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+        }
     }
 
     doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
