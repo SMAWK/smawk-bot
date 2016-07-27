@@ -143,10 +143,10 @@ func (bot *SmawkBot) GenerateUpdate(cmd string) (tgbotapi.Update, error) {
 // instance of the bot
 func GenerateCertificate(c string, st string, ct string, org string, dom string, key string, cert string) {
     // Generate our string for the certificate
-    certstring := "\"/C="+c+"/ST="+st+"/L="+ct+"/O="+org+"/CN="+dom+"\""
+    certstring := "/C="+c+"/ST="+st+"/L="+ct+"/O="+org+"/CN="+dom
 
     cmdname := "openssl"
-    cmdargs := []string{"req","-newkey","rsa:2048","-sha256","-nodes","-keyout",key,"-x509","-days","365","-out",cert,"-subj","/"+certstring}
+    cmdargs := []string{"req","-newkey","rsa:2048","-sha256","-nodes","-keyout",key,"-x509","-days","365","-out",cert,"-subj",certstring}
 
     cmd := exec.Command(cmdname,cmdargs...)
     var stderr bytes.Buffer
