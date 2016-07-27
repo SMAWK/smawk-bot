@@ -89,6 +89,14 @@ func (bot *SmawkBot) ExecuteHelloCommand(update tgbotapi.Update) {
 }
 
 func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
+    // Make sure that we have the hype command in our working directory
+    if _, err := os.Stat("hype.gif"); os.IsNotExist(err) {
+        // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, "No gif in my working directory :(")
+        bot.API.Send(msg)
+        break;
+    }
+
     doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
     bot.API.Send(doc)
 }
