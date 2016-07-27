@@ -8,6 +8,7 @@ import (
     "os/exec"
     "bytes"
     "fmt"
+    "os"
 )
 
 // BotAPI allows you to interact with the Telegram Bot API.
