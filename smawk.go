@@ -131,7 +131,7 @@ func (bot *SmawkBot) ExecuteWhatchuDidThereCommand(update tgbotapi.Update) {
         }
     }
 
-    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
+    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "whoa.gif")
     bot.API.Send(doc)
 }
 
