@@ -72,6 +72,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
         bot.ExecuteIDCommand(update)
     } else if (cmd == "/hype" || cmd == "/hype@smawk_bot") {
         bot.ExecuteHypeCommand(update)
+    } else if (cmd == "/whatchu_did_there" || cmd == "/whatchu_did_there@smawk_bot") {
+        bot.ExecuteWhatchuDidThereCommand(update)
     }
 }
 
@@ -98,6 +100,27 @@ func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
         // Fetch it from the SMAWK source
         cmdname := "curl"
         cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/hype.gif"}
+
+        cmd := exec.Command(cmdname,cmdargs...)
+        var stderr bytes.Buffer
+        cmd.Stderr = &stderr
+        err := cmd.Run()
+        if err != nil {
+            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+        }
+    }
+
+    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
+    bot.API.Send(doc)
+}
+
+func (bot *SmawkBot) ExecuteWhatchuDidThereCommand(update tgbotapi.Update) {
+    // Make sure that we have the hype command in our working directory
+    if _, err := os.Stat("whoa.gif"); os.IsNotExist(err) {
+        // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
+        // Fetch it from the SMAWK source
+        cmdname := "curl"
+        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/whoa.gif"}
 
         cmd := exec.Command(cmdname,cmdargs...)
         var stderr bytes.Buffer

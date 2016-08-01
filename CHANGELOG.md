@@ -19,3 +19,6 @@ Please use the following format when you update the changelog:
 	- Adds /id unit tests
 - Adds /hype command
 	- Adds autofetch of gif if needed
+
+###2016-08-01 - bmatt468
+- Adds new 'Whatchu Did There' gif
