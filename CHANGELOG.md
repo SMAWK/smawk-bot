@@ -22,3 +22,7 @@ Please use the following format when you update the changelog:
 
 ###2016-08-01 - bmatt468
 - Adds new 'Whatchu Did There' gif
+
+###2016-08-05 - bmatt468
+- Lets /hype be called anywhere in a string
+	- Adds appropriate tests

@@ -9,6 +9,7 @@ import (
     "os"
     "os/exec"
     "strconv"
+    "strings"
 )
 
 // BotAPI allows you to interact with the Telegram Bot API.
@@ -65,14 +66,14 @@ func (bot *SmawkBot) Listen(token string) <-chan tgbotapi.Update {
 }
 
 func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
-    cmd := update.Message.Text
-    if (cmd == "/start" || cmd == "/start@smawk_bot") {
+    cmd := strings.Split(update.Message.Text, " ")
+    if (cmd[0] == "/start" || cmd[0] == "/start@smawk_bot") {
         bot.ExecuteStartCommand(update)
-    } else if (cmd == "/id" || cmd == "/id@smawk_bot") {
+    } else if (cmd[0] == "/id" || cmd[0] == "/id@smawk_bot") {
         bot.ExecuteIDCommand(update)
-    } else if (cmd == "/hype" || cmd == "/hype@smawk_bot") {
+    } else if (cmd[0] == "/hype" || cmd[0] == "/hype@smawk_bot" || strings.Contains(update.Message.Text, "/hype") || strings.Contains(update.Message.Text, "/hype@smawk_bot")) {
         bot.ExecuteHypeCommand(update)
-    } else if (cmd == "/whatchu_did_there" || cmd == "/whatchu_did_there@smawk_bot") {
+    } else if (cmd[0] == "/whatchu_did_there" || cmd[0] == "/whatchu_did_there@smawk_bot") {
         bot.ExecuteWhatchuDidThereCommand(update)
     }
 }

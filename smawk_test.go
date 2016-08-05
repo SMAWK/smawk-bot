@@ -1,10 +1,15 @@
 package smawk_test
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"gopkg.in/telegram-bot-api.v4"
 	"log"
+	"os"
+	"os/exec"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -124,4 +129,34 @@ func TestIDCommand(t *testing.T) {
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Your chat ID is: "+strconv.FormatInt(update.Message.Chat.ID,10))
     bot.Send(msg)
+}
+
+// TestContainedHypeCommand tests to make sure that the bot will properly handle a /hype
+// command that is contained inside of a string
+func TestContainedHypeCommand(t *testing.T) {
+	// Fetch our bot using the helper function
+	bot, _ := getBot(t)
+
+	update, _ := generateUpdate(t,"test /hype")
+
+	if (strings.Contains(update.Message.Text, "/hype") || strings.Contains(update.Message.Text, "/hype@smawk_bot")) {
+        // Make sure that we have the hype command in our working directory
+	    if _, err := os.Stat("hype.gif"); os.IsNotExist(err) {
+	        // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
+	        // Fetch it from the SMAWK source
+	        cmdname := "curl"
+	        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/hype.gif"}
+
+	        cmd := exec.Command(cmdname,cmdargs...)
+	        var stderr bytes.Buffer
+	        cmd.Stderr = &stderr
+	        err := cmd.Run()
+	        if err != nil {
+	            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+	        }
+	    }
+
+	    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
+	    bot.Send(doc)
+    }
 }
