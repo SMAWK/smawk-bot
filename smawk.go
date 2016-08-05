@@ -4,6 +4,7 @@ import (
     "bytes"
     "encoding/json"
     "fmt"
+    _ "github.com/go-sql-driver/mysql"
     "gopkg.in/telegram-bot-api.v4"
     "log"
     "os"

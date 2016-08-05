@@ -2,8 +2,10 @@ package smawk_test
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/go-sql-driver/mysql"
 	"gopkg.in/telegram-bot-api.v4"
 	"log"
 	"os"
@@ -85,7 +87,7 @@ func generateUpdate(t *testing.T, cmd string) (tgbotapi.Update, error) {
 /* ================================================ */
 
 // TestLoadBot tests to see if the bot is loading and authenticated properly
-func TestLoadBot(t *testing.T) {
+func iTestLoadBot(t *testing.T) {
 	// Fetch our bot using the helper function
 	_, err := getBot(t)
 
@@ -101,7 +103,7 @@ func TestLoadBot(t *testing.T) {
 
 // TestSendMessage tests to see if the bot can properly send a message to the provided
 // chatID (the private chat of the user)
-func TestSendMessage(t *testing.T) {
+func iTestSendMessage(t *testing.T) {
 	// Fetch our bot using the helper function
 	bot, _ := getBot(t)
 
@@ -121,7 +123,7 @@ func TestSendMessage(t *testing.T) {
 
 // TestIDCommand tests to make sure that the bot will properly send an
 // ID to a private chat while refusing to send to a public chat
-func TestIDCommand(t *testing.T) {
+func iTestIDCommand(t *testing.T) {
 	// Fetch our bot using the helper function
 	bot, _ := getBot(t)
 
@@ -133,7 +135,7 @@ func TestIDCommand(t *testing.T) {
 
 // TestContainedHypeCommand tests to make sure that the bot will properly handle a /hype
 // command that is contained inside of a string
-func TestContainedHypeCommand(t *testing.T) {
+func iTestContainedHypeCommand(t *testing.T) {
 	// Fetch our bot using the helper function
 	bot, _ := getBot(t)
 
@@ -158,5 +160,27 @@ func TestContainedHypeCommand(t *testing.T) {
 
 	    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
 	    bot.Send(doc)
+    }
+}
+
+// TestDatabaseConnection Makes sure that we are connected to our database where the scores are located
+func TestDatabaseConnection(t *testing.T) {
+	cfg := &mysql.Config {
+		User: "smawk-bot",
+		Passwd: "SM@WKisGR8",
+		Net: "tcp",
+		Addr: "107.170.45.12:3306",
+	}
+	db, err := sql.Open("mysql", cfg.FormatDSN())
+    if err != nil {
+      	log.Fatal(err)
+		t.FailNow()
+    }
+    defer db.Close()
+
+    err = db.Ping()
+    if err != nil {
+        log.Fatal(err)
+		t.FailNow()
     }
 }
