@@ -82,12 +82,23 @@ func generateUpdate(t *testing.T, cmd string) (tgbotapi.Update, error) {
 	return upd, nil
 }
 
+func connect() (*sql.DB, error) {
+	cfg := &mysql.Config {
+		User: "smawk-bot",
+		Passwd: "SM@WKisGR8",
+		Net: "tcp",
+		Addr: "107.170.45.12:3306",
+		DBName: "smawk-bot",
+	}
+	return sql.Open("mysql", cfg.FormatDSN())
+}
+
 /* ================================================ */
 /*                Testing functions                 */
 /* ================================================ */
 
 // TestLoadBot tests to see if the bot is loading and authenticated properly
-func iTestLoadBot(t *testing.T) {
+func TestLoadBot(t *testing.T) {
 	// Fetch our bot using the helper function
 	_, err := getBot(t)
 
@@ -165,13 +176,7 @@ func iTestContainedHypeCommand(t *testing.T) {
 
 // TestDatabaseConnection Makes sure that we are connected to our database where the scores are located
 func TestDatabaseConnection(t *testing.T) {
-	cfg := &mysql.Config {
-		User: "smawk-bot",
-		Passwd: "SM@WKisGR8",
-		Net: "tcp",
-		Addr: "107.170.45.12:3306",
-	}
-	db, err := sql.Open("mysql", cfg.FormatDSN())
+	db, err := connect()
     if err != nil {
       	log.Fatal(err)
 		t.FailNow()
@@ -183,4 +188,45 @@ func TestDatabaseConnection(t *testing.T) {
         log.Fatal(err)
 		t.FailNow()
     }
+
+    log.Printf("DB Connection Successful")
+}
+
+// TestUsersFetch makes a test call to the database to get the list of users in the database
+func TestUsersFetch(t *testing.T) {
+	db, err := connect()
+	if err != nil {
+      	log.Fatal(err)
+		t.FailNow()
+    }
+    defer db.Close()
+
+    users, err := db.Query("SELECT id, username, first_name, last_name FROM users")
+    if err != nil {
+            log.Fatal(err)
+    }
+    defer users.Close()
+    for users.Next() {
+            var id string
+            var username string
+            var first_name string
+            var last_name string
+            if err := users.Scan(&id, &username, &first_name, &last_name); err != nil {
+                    log.Fatal(err)
+            }
+            fmt.Printf("ID:%s Username:%s Name: %s %s\n", id, username, first_name, last_name)
+    }
+    if err := users.Err(); err != nil {
+            log.Fatal(err)
+    }
+}
+
+// TestScoreCommand makes sure that we can connect to the database and properly obtain the score for everybody
+func TestScoreCommand(t *testing.T) {
+	db, err := connect()
+	if err != nil {
+      	log.Fatal(err)
+		t.FailNow()
+    }
+    defer db.Close()
 }
