@@ -290,15 +290,16 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
         bot.API.Send(msg)
     } else if len(cmd) >= 3 {
         // Create our reason
+        reason := strings.Join(cmd[2:]," ")
 
         // Downvote User Reason
-        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-1,?,? FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[2],cmd[1])
+        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-1,?,? FROM users u WHERE u.username=?",update.Message.Chat.ID,reason,cmd[1])
         if err != nil {
                 log.Fatal(err)
         }
         defer votes.Close()
 
-        msg_string := cmd[1]+" has been downvoted 1 point for "+cmd[2]
+        msg_string := cmd[1]+" has been downvoted 1 point for "+reason
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
     }
