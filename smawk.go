@@ -225,7 +225,6 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
         msg_string := "Correct Usage: /upvote @username [reason]"
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
-        return
     } else if len(cmd) == 2 {
         if cmd[1] == "@"+update.Message.From.UserName {
             // Someone commited the cardinal sin
@@ -236,7 +235,6 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
             msg_string := cmd[1]+" has been docked 3 points for self upvoting!"
             msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
             bot.API.Send(msg)
-            return
         }
 
         // Upvote User
@@ -249,19 +247,20 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
         msg_string := cmd[1]+" has been upvoted 1 point"
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
-        return
     } else if len(cmd) >= 3 {
+        // Create our reason
+        reason = strings.Join(cmd[2:]," ")
+
         // Upvote User Reason
-        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,1,?,? FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[2],cmd[1])
+        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,1,?,? FROM users u WHERE u.username=?",update.Message.Chat.ID,reason,cmd[1])
         if err != nil {
                 log.Fatal(err)
         }
         defer votes.Close()
 
-        msg_string := cmd[1]+" has been upvoted 1 point for "+cmd[2]
+        msg_string := cmd[1]+" has been upvoted 1 point for "+reason
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
-        return
     }
 }
 
@@ -278,7 +277,6 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
         msg_string := "Correct Usage: /downvote @username [reason]"
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
-        return
     } else if len(cmd) == 2 {
         // Downvote User
         votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-1,?,'no reason' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
@@ -290,8 +288,9 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
         msg_string := cmd[1]+" has been downvoted 1 point"
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
-        return
-    } else if len(cmd) == 3 {
+    } else if len(cmd) >= 3 {
+        // Create our reason
+
         // Downvote User Reason
         votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-1,?,? FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[2],cmd[1])
         if err != nil {
@@ -302,7 +301,6 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
         msg_string := cmd[1]+" has been downvoted 1 point for "+cmd[2]
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
-        return
     }
 }
 
