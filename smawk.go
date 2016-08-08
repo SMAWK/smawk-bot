@@ -68,21 +68,23 @@ func (bot *SmawkBot) Listen(token string) <-chan tgbotapi.Update {
 }
 
 func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
-    cmd := strings.Split(update.Message.Text, " ")
-    if (cmd[0] == "/start" || cmd[0] == "/start@smawk_bot") {
-        bot.ExecuteStartCommand(update)
-    } else if (cmd[0] == "/id" || cmd[0] == "/id@smawk_bot") {
-        bot.ExecuteIDCommand(update)
-    } else if (cmd[0] == "/hype" || cmd[0] == "/hype@smawk_bot" || strings.Contains(update.Message.Text, "/hype") || strings.Contains(update.Message.Text, "/hype@smawk_bot")) {
-        bot.ExecuteHypeCommand(update)
-    } else if (cmd[0] == "/whatchu_did_there" || cmd[0] == "/whatchu_did_there@smawk_bot") {
-        bot.ExecuteWhatchuDidThereCommand(update)
-    } else if (cmd[0] == "/score" || cmd[0] == "/score@smawk_bot") {
-        bot.ExecuteScoreCommand(update, cmd)
-    } else if (cmd[0] == "/upvote" || cmd[0] == "/upvote@smawk_bot") {
-        bot.ExecuteUpvoteCommand(update, cmd)
-    } else if (cmd[0] == "/downvote" || cmd[0] == "/downvote@smawk_bot") {
-        bot.ExecuteDownvoteCommand(update, cmd)
+    if update.Message.Text != "" {
+        cmd := strings.Split(update.Message.Text, " ")
+        if (cmd[0] == "/start" || cmd[0] == "/start@smawk_bot") {
+            bot.ExecuteStartCommand(update)
+        } else if (cmd[0] == "/id" || cmd[0] == "/id@smawk_bot") {
+            bot.ExecuteIDCommand(update)
+        } else if (cmd[0] == "/hype" || cmd[0] == "/hype@smawk_bot" || strings.Contains(update.Message.Text, "/hype") || strings.Contains(update.Message.Text, "/hype@smawk_bot")) {
+            bot.ExecuteHypeCommand(update)
+        } else if (cmd[0] == "/whatchu_did_there" || cmd[0] == "/whatchu_did_there@smawk_bot") {
+            bot.ExecuteWhatchuDidThereCommand(update)
+        } else if (cmd[0] == "/score" || cmd[0] == "/score@smawk_bot") {
+            bot.ExecuteScoreCommand(update, cmd)
+        } else if (cmd[0] == "/upvote" || cmd[0] == "/upvote@smawk_bot") {
+            bot.ExecuteUpvoteCommand(update, cmd)
+        } else if (cmd[0] == "/downvote" || cmd[0] == "/downvote@smawk_bot") {
+            bot.ExecuteDownvoteCommand(update, cmd)
+        }
     }
 }
 
