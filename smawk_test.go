@@ -274,7 +274,7 @@ func TestUserScoreCommand(t *testing.T) {
     	return
     }
 
-    fmt.Printf("%s has %s points, of which:\n",cmd[1],total_points)
+    fmt.Printf("%s has %s points, of which:\n",cmd[1],total_points.String)
 
     users, err := db.Query("SELECT SUM(s.point) as points, s.reason FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username = '"+cmd[1]+"' GROUP BY s.reason")
     if err != nil {

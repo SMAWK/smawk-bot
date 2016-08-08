@@ -197,7 +197,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
                 if err := users.Scan(&points, &reason); err != nil {
                         log.Fatal(err)
                 }
-                msg_string += points+" is for "+reason
+                msg_string += points+" is for "+reason+"\n"
         }
         if err := users.Err(); err != nil {
                 log.Fatal(err)
