@@ -84,6 +84,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
             bot.ExecuteUpvoteCommand(update, cmd)
         } else if (cmd[0] == "/downvote" || cmd[0] == "/downvote@smawk_bot") {
             bot.ExecuteDownvoteCommand(update, cmd)
+        } else if (cmd[0] == "/bless" || cmd[0] == "/bless@smawk_bot") {
+            bot.ExecuteBlessCommand(update, cmd)
         }
     }
 }
@@ -310,6 +312,31 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
         defer votes.Close()
 
         msg_string := cmd[1]+" has been downvoted 1 point for "+reason
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+    }
+}
+
+func (bot *SmawkBot) ExecuteBlessCommand(update tgbotapi.Update, cmd []string) {
+    if update.Message.From.UserName == "bnmtthews" {
+        // Connect to our database
+        db, err := ConnectDB()
+        if err != nil {
+            log.Fatal(err)
+        }
+        defer db.Close()
+
+        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,1,?,'Blessing from Moses' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
+        if err != nil {
+                log.Fatal(err)
+        }
+        defer votes.Close()
+
+        msg_string := cmd[1]+" has been blessed for 3 points"
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+    } else {
+        msg_string := "The power of blessing has not been bestowed upon you"
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
     }
