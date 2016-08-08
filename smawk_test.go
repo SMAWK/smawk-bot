@@ -219,6 +219,8 @@ func TestUsersFetch(t *testing.T) {
     if err := users.Err(); err != nil {
             log.Fatal(err)
     }
+
+    fmt.Printf("\n=============\n")
 }
 
 // TestScoreCommand makes sure that we can connect to the database and properly obtain the score for everybody
@@ -229,4 +231,21 @@ func TestScoreCommand(t *testing.T) {
 		t.FailNow()
     }
     defer db.Close()
+
+    users, err := db.Query("SELECT u.username, SUM(s.point) as 'points' FROM scores s JOIN users u on u.id = s.user_id GROUP BY s.user_id")
+    if err != nil {
+            log.Fatal(err)
+    }
+    defer users.Close()
+    for users.Next() {
+            var username string
+            var points string
+            if err := users.Scan(&username, &points); err != nil {
+                    log.Fatal(err)
+            }
+            fmt.Printf("%s: %s\n", username, points)
+    }
+    if err := users.Err(); err != nil {
+            log.Fatal(err)
+    }
 }
