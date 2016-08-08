@@ -249,10 +249,11 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
         bot.API.Send(msg)
     } else if len(cmd) >= 3 {
         // Create our reason
+        var reason string
         if cmd[2] == "for" && len(cmd) > 3 {
-            reason := strings.Join(cmd[3:]," ")
+            reason = strings.Join(cmd[3:]," ")
         } else {
-            reason := strings.Join(cmd[2:]," ")
+            reason = strings.Join(cmd[2:]," ")
         }
 
         // Upvote User Reason
@@ -294,10 +295,11 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
         bot.API.Send(msg)
     } else if len(cmd) >= 3 {
         // Create our reason
+        var reason string
         if cmd[2] == "for" && len(cmd) > 3 {
-            reason := strings.Join(cmd[3:]," ")
+            reason = strings.Join(cmd[3:]," ")
         } else {
-            reason := strings.Join(cmd[2:]," ")
+            reason = strings.Join(cmd[2:]," ")
         }
 
         // Downvote User Reason
