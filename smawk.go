@@ -249,7 +249,11 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
         bot.API.Send(msg)
     } else if len(cmd) >= 3 {
         // Create our reason
-        reason := strings.Join(cmd[2:]," ")
+        if cmd[2] == "for" && len(cmd) > 3 {
+            reason := strings.Join(cmd[3:]," ")
+        } else {
+            reason := strings.Join(cmd[2:]," ")
+        }
 
         // Upvote User Reason
         votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,1,?,? FROM users u WHERE u.username=?",update.Message.Chat.ID,reason,cmd[1])
@@ -290,7 +294,11 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
         bot.API.Send(msg)
     } else if len(cmd) >= 3 {
         // Create our reason
-        reason := strings.Join(cmd[2:]," ")
+        if cmd[2] == "for" && len(cmd) > 3 {
+            reason := strings.Join(cmd[3:]," ")
+        } else {
+            reason := strings.Join(cmd[2:]," ")
+        }
 
         // Downvote User Reason
         votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-1,?,? FROM users u WHERE u.username=?",update.Message.Chat.ID,reason,cmd[1])
