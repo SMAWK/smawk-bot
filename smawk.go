@@ -229,7 +229,10 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
     } else if len(cmd) == 2 {
         if cmd[1] == "@"+update.Message.From.UserName {
             // Someone commited the cardinal sin
-            votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-3,?,'Self Upvote' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
+            _, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-3,?,'Self Upvote' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
+            if err != nil {
+                log.Fatal(err)
+            }
             msg_string := cmd[1]+" has been docked 3 points for self upvoting!"
             msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
             bot.API.Send(msg)
