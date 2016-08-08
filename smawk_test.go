@@ -232,7 +232,7 @@ func TestScoreCommand(t *testing.T) {
     }
     defer db.Close()
 
-    users, err := db.Query("SELECT u.username, SUM(s.point) as 'points' FROM scores s JOIN users u on u.id = s.user_id GROUP BY s.user_id")
+    users, err := db.Query("SELECT u.username, SUM(s.point) as 'points' FROM scores s JOIN users u on u.id = s.user_id WHERE s.chat_id = -9125034 GROUP BY s.user_id")
     if err != nil {
             log.Fatal(err)
     }
@@ -243,9 +243,20 @@ func TestScoreCommand(t *testing.T) {
             if err := users.Scan(&username, &points); err != nil {
                     log.Fatal(err)
             }
-            fmt.Printf("%s: %s\n", username, points)
+            fmt.Printf("@%s: %s\n", username, points)
     }
     if err := users.Err(); err != nil {
             log.Fatal(err)
     }
+}
+
+func TestUserScoreCommand(t *testing.T) {
+	db, err := connect()
+	if err != nil {
+      	log.Fatal(err)
+		t.FailNow()
+    }
+    defer db.Close()
+
+    //update, _ := generateUpdate(t,"/score")
 }
