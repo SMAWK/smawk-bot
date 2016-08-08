@@ -2,8 +2,10 @@ package smawk
 
 import (
     "bytes"
+    "database/sql"
     "encoding/json"
     "fmt"
+    "github.com/go-sql-driver/mysql"
     "gopkg.in/telegram-bot-api.v4"
     "log"
     "os"
@@ -75,6 +77,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
         bot.ExecuteHypeCommand(update)
     } else if (cmd[0] == "/whatchu_did_there" || cmd[0] == "/whatchu_did_there@smawk_bot") {
         bot.ExecuteWhatchuDidThereCommand(update)
+    } else if (cmd[0] == "/score" || cmd[0] == "/score@smawk_bot") {
+        bot.ExecuteScoreCommand(update, cmd)
     }
 }
 
@@ -134,6 +138,39 @@ func (bot *SmawkBot) ExecuteWhatchuDidThereCommand(update tgbotapi.Update) {
 
     doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "whoa.gif")
     bot.API.Send(doc)
+}
+
+func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
+    // Connect to our database
+    db, err := ConnectDB()
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // Create our query
+    users, err := db.Query("SELECT u.username, SUM(s.point) as 'points' FROM scores s JOIN users u on u.id = s.user_id WHERE s.chat_id = "+strconv.FormatInt(update.Message.Chat.ID,10)+" GROUP BY s.user_id")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer users.Close()
+
+    // Get our scores
+    msg_string := ""
+    for users.Next() {
+            var username string
+            var points string
+            if err := users.Scan(&username, &points); err != nil {
+                log.Fatal(err)
+            }
+        msg_string += "\n@"+username+": "+points+"\n"
+    }
+    if err := users.Err(); err != nil {
+            log.Fatal(err)
+    }
+
+    msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+    bot.API.Send(msg)
 }
 
 /* ================================================ */
@@ -198,4 +235,16 @@ func GenerateCertificate(c string, st string, ct string, org string, dom string,
     if err != nil {
         fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
     }
+}
+
+// ConnectDB takes care of opening a proper connection to the database to retrieve the scores that we need
+func ConnectDB() (*sql.DB, error) {
+    cfg := &mysql.Config {
+        User: "smawk-bot",
+        Passwd: "SM@WKisGR8",
+        Net: "tcp",
+        Addr: "107.170.45.12:3306",
+        DBName: "smawk-bot",
+    }
+    return sql.Open("mysql", cfg.FormatDSN())
 }
