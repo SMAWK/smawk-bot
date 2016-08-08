@@ -68,7 +68,7 @@ func (bot *SmawkBot) Listen(token string) <-chan tgbotapi.Update {
 }
 
 func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
-    if update.Message && update.Message.Text {
+    if update.Message.Text != "" {
         cmd := strings.Split(update.Message.Text, " ")
         if (cmd[0] == "/start" || cmd[0] == "/start@smawk_bot") {
             bot.ExecuteStartCommand(update)
@@ -227,18 +227,16 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
         msg_string := "Correct Usage: /upvote @username [reason]"
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
-    } else if len(cmd) == 2 {
-        if cmd[1] == "@"+update.Message.From.UserName {
-            // Someone commited the cardinal sin
-            _, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-3,?,'Self Upvote' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
-            if err != nil {
-                log.Fatal(err)
-            }
-            msg_string := cmd[1]+" has been docked 3 points for self upvoting!"
-            msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-            bot.API.Send(msg)
+    } else if cmd[1] == "@"+update.Message.From.UserName {
+        // Someone commited the cardinal sin
+        _, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-3,?,'Self Upvote' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
+        if err != nil {
+            log.Fatal(err)
         }
-
+        msg_string := cmd[1]+" has been docked 3 points for self upvoting!"
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+    } else if len(cmd) == 2 {
         // Upvote User
         votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,1,?,'no reason' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
         if err != nil {
