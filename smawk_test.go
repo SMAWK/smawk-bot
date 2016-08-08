@@ -243,11 +243,12 @@ func TestScoreCommand(t *testing.T) {
             if err := users.Scan(&username, &points); err != nil {
                     log.Fatal(err)
             }
-            fmt.Printf("@%s: %s\n", username, points)
+            fmt.Printf("%s: %s\n", username, points)
     }
     if err := users.Err(); err != nil {
             log.Fatal(err)
     }
+    fmt.Printf("\n=============\n")
 }
 
 func TestUserScoreCommand(t *testing.T) {
@@ -258,5 +259,37 @@ func TestUserScoreCommand(t *testing.T) {
     }
     defer db.Close()
 
-    //update, _ := generateUpdate(t,"/score")
+    update, _ := generateUpdate(t,"/score @bnmtthews")
+    cmd := strings.Split(update.Message.Text, " ")
+
+    var total_points sql.NullString
+    err = db.QueryRow("SELECT SUM(s.point) FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username=?", cmd[1]).Scan(&total_points)
+    if err != nil {
+            log.Fatal(err)
+    } else if err == sql.ErrNoRows {
+    	fmt.Printf("User %s does not exist.\n",cmd[1])
+    	return
+    } else if !total_points.Valid {
+    	fmt.Printf("User %s does not exist.\n",cmd[1])
+    	return
+    }
+
+    fmt.Printf("%s has %s points, of which:\n",cmd[1],total_points)
+
+    users, err := db.Query("SELECT SUM(s.point) as points, s.reason FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username = '"+cmd[1]+"' GROUP BY s.reason")
+    if err != nil {
+            log.Fatal(err)
+    }
+    defer users.Close()
+    for users.Next() {
+            var points string
+            var reason string
+            if err := users.Scan(&points, &reason); err != nil {
+                    log.Fatal(err)
+            }
+            fmt.Printf("%s is for %s\n", points, reason)
+    }
+    if err := users.Err(); err != nil {
+            log.Fatal(err)
+    }
 }

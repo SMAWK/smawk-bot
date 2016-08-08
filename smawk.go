@@ -148,29 +148,64 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
     }
     defer db.Close()
 
-    // Create our query
-    users, err := db.Query("SELECT u.username, SUM(s.point) as 'points' FROM scores s JOIN users u on u.id = s.user_id WHERE s.chat_id = "+strconv.FormatInt(update.Message.Chat.ID,10)+" GROUP BY s.user_id")
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer users.Close()
-
-    // Get our scores
-    msg_string := ""
-    for users.Next() {
-            var username string
-            var points string
-            if err := users.Scan(&username, &points); err != nil {
-                log.Fatal(err)
-            }
-        msg_string += "\n@"+username+": "+points
-    }
-    if err := users.Err(); err != nil {
+    if len(cmd) == 1 {
+        // Create our query
+        users, err := db.Query("SELECT u.username, SUM(s.point) as 'points' FROM scores s JOIN users u on u.id = s.user_id WHERE s.chat_id = "+strconv.FormatInt(update.Message.Chat.ID,10)+" GROUP BY s.user_id")
+        if err != nil {
             log.Fatal(err)
-    }
+        }
+        defer users.Close()
 
-    msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-    bot.API.Send(msg)
+        // Get our scores
+        msg_string := ""
+        for users.Next() {
+                var username string
+                var points string
+                if err := users.Scan(&username, &points); err != nil {
+                    log.Fatal(err)
+                }
+            msg_string += "\n"+username+": "+points
+        }
+        if err := users.Err(); err != nil {
+                log.Fatal(err)
+        }
+
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+    } else if len(cmd) == 2 {
+        var total_points sql.NullString
+        err = db.QueryRow("SELECT SUM(s.point) FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username=?", cmd[1]).Scan(&total_points)
+        if err != nil {
+                log.Fatal(err)
+        } else if err == sql.ErrNoRows || !total_points.Valid {
+            msg_string := "User "+cmd[1]+"  does not exist.\n"
+            msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+            bot.API.Send(msg)
+            return
+        }
+
+        msg_string := cmd[1]+" has "+total_points.String+" points, of which:\n"
+
+        users, err := db.Query("SELECT SUM(s.point) as points, s.reason FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username = '"+cmd[1]+"' GROUP BY s.reason")
+        if err != nil {
+                log.Fatal(err)
+        }
+        defer users.Close()
+        for users.Next() {
+                var points string
+                var reason string
+                if err := users.Scan(&points, &reason); err != nil {
+                        log.Fatal(err)
+                }
+                msg_string += points+" is for "+reason
+        }
+        if err := users.Err(); err != nil {
+                log.Fatal(err)
+        }
+
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+    }
 }
 
 /* ================================================ */
