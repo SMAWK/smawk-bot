@@ -326,7 +326,7 @@ func (bot *SmawkBot) ExecuteBlessCommand(update tgbotapi.Update, cmd []string) {
         }
         defer db.Close()
 
-        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,1,?,'Blessing from Moses' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
+        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,3,?,'Blessing from Moses' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
         if err != nil {
                 log.Fatal(err)
         }
