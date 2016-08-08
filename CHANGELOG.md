@@ -26,3 +26,8 @@ Please use the following format when you update the changelog:
 ###2016-08-05 - bmatt468
 - Lets /hype be called anywhere in a string
 	- Adds appropriate tests
+
+###2016-08-08 - bmatt468
+- Adds Scoring
+- Adds Upvoting
+- Adds Downvoting

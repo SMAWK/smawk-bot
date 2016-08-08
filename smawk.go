@@ -79,6 +79,10 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
         bot.ExecuteWhatchuDidThereCommand(update)
     } else if (cmd[0] == "/score" || cmd[0] == "/score@smawk_bot") {
         bot.ExecuteScoreCommand(update, cmd)
+    } else if (cmd[0] == "/upvote" || cmd[0] == "/upvote@smawk_bot") {
+        bot.ExecuteUpvoteCommand(update, cmd)
+    } else if (cmd[0] == "/downvote" || cmd[0] == "/downvote@smawk_bot") {
+        bot.ExecuteDownvoteCommand(update, cmd)
     }
 }
 
@@ -205,6 +209,51 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
 
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
+    }
+}
+
+func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) {
+
+}
+
+func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string) {
+    // Connect to our database
+    db, err := ConnectDB()
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    if len(cmd) == 1 {
+        // Wrong Usage
+        msg_string := "Correct Usage: /downvote @username [reason]"
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+        return
+    } else if len(cmd) == 2 {
+        // Downvote User
+        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,'no reason') SELECT id,-1,? FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
+        if err != nil {
+                log.Fatal(err)
+        }
+        defer votes.Close()
+
+        msg_string := cmd[1]+" has been downvoted 1 point"
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+        return
+    } else if len(cmd) == 3 {
+        // Downvote User Reason
+        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,?) SELECT id,-1,? FROM users u WHERE u.username=?",cmd[2],update.Message.Chat.ID,cmd[1])
+        if err != nil {
+                log.Fatal(err)
+        }
+        defer votes.Close()
+
+        msg_string := cmd[1]+" has been downvoted 1 point for "+cmd[2]
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+        return
     }
 }
 
