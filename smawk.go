@@ -250,7 +250,7 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
         return
-    } else if len(cmd) == 3 {
+    } else if len(cmd) >= 3 {
         // Upvote User Reason
         votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,1,?,? FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[2],cmd[1])
         if err != nil {
