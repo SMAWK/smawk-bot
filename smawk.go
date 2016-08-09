@@ -12,6 +12,7 @@ import (
     "os/exec"
     "strconv"
     "strings"
+    "time"
 )
 
 // BotAPI allows you to interact with the Telegram Bot API.
@@ -88,6 +89,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
             bot.ExecuteBlessCommand(update, cmd)
         } else if (cmd[0] == "/curse" || cmd[0] == "/curse@smawk_bot") {
             bot.ExecuteCurseCommand(update, cmd)
+        } else if (cmd[0] == "/splash" || cmd[0] == "/splash@smawk_bot") {
+            bot.ExecuteSplashCommand(update)
         }
     }
 }
@@ -367,6 +370,18 @@ func (bot *SmawkBot) ExecuteCurseCommand(update tgbotapi.Update, cmd []string) {
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
         bot.API.Send(msg)
     }
+}
+
+func (bot *SmawkBot) ExecuteSplashCommand(update tgbotapi.Update) {
+    msg_string := "@"+update.Message.From.UserName+" used splash....."
+    msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+    bot.API.Send(msg)
+
+    duration := time.Duration(5)*time.Second
+    time.Sleep(duration)
+    msg_string2 := "... but nothing happened"
+    msg2 := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+    bot.API.Send(msg2)
 }
 
 /* ================================================ */
