@@ -320,7 +320,7 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
 }
 
 func (bot *SmawkBot) ExecuteBlessCommand(update tgbotapi.Update, cmd []string) {
-    if update.Message.From.UserName == "bnmtthews" {
+    if update.Message.From.UserName == "bnmtthews" || update.Message.From.UserName == "ReverendRecker" || update.Message.From.UserName == "CMoneys" {
         // Connect to our database
         db, err := ConnectDB()
         if err != nil {
@@ -328,7 +328,7 @@ func (bot *SmawkBot) ExecuteBlessCommand(update tgbotapi.Update, cmd []string) {
         }
         defer db.Close()
 
-        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,3,?,'Blessing from Moses' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
+        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,3,?,'Blessings from Dude' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
         if err != nil {
                 log.Fatal(err)
         }
@@ -345,7 +345,7 @@ func (bot *SmawkBot) ExecuteBlessCommand(update tgbotapi.Update, cmd []string) {
 }
 
 func (bot *SmawkBot) ExecuteCurseCommand(update tgbotapi.Update, cmd []string) {
-    if update.Message.From.UserName == "bnmtthews" {
+    if update.Message.From.UserName == "bnmtthews" || update.Message.From.UserName == "ReverendRecker" || update.Message.From.UserName == "CMoneys" {
         // Connect to our database
         db, err := ConnectDB()
         if err != nil {
@@ -353,7 +353,7 @@ func (bot *SmawkBot) ExecuteCurseCommand(update tgbotapi.Update, cmd []string) {
         }
         defer db.Close()
 
-        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-3,?,'Curses from Moses' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
+        votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-3,?,'Curses from Dude' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
         if err != nil {
                 log.Fatal(err)
         }
