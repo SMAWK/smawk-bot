@@ -380,7 +380,7 @@ func (bot *SmawkBot) ExecuteSplashCommand(update tgbotapi.Update) {
     duration := time.Duration(5)*time.Second
     time.Sleep(duration)
     msg_string2 := "... but nothing happened"
-    msg2 := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+    msg2 := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string2)
     bot.API.Send(msg2)
 }
 
