@@ -163,7 +163,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
 
     if len(cmd) == 1 {
         // Create our query
-        users, err := db.Query("SELECT u.username, SUM(s.point) as 'points' FROM scores s JOIN users u on u.id = s.user_id WHERE s.chat_id = "+strconv.FormatInt(update.Message.Chat.ID,10)+" GROUP BY s.user_id")
+        users, err := db.Query("SELECT u.username, SUM(s.point) as `points` FROM scores s JOIN users u on u.id = s.user_id WHERE s.chat_id = "+strconv.FormatInt(update.Message.Chat.ID,10)+" GROUP BY s.user_id ORDER BY `points` DESC")
         if err != nil {
             log.Fatal(err)
         }
@@ -171,6 +171,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
 
         // Get our scores
         msg_string := ""
+
         for users.Next() {
                 var username string
                 var points string
