@@ -389,11 +389,11 @@ func (bot *SmawkBot) ExecuteSplashCommand(update tgbotapi.Update) {
 
 func (bot *SmawkBot) ExecuteWhyCommand(update tgbotapi.Update) {
     // Make sure that we have the hype command in our working directory
-    if _, err := os.Stat("why.jpg"); os.IsNotExist(err) {
+    if _, err := os.Stat("why.gif"); os.IsNotExist(err) {
         // NOOOO!!!! WE DON'T HAVE THE IMAGE!!!!!
         // Fetch it from the SMAWK source
         cmdname := "curl"
-        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/why.jpg"}
+        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/why.gif"}
 
         cmd := exec.Command(cmdname,cmdargs...)
         var stderr bytes.Buffer
@@ -404,7 +404,7 @@ func (bot *SmawkBot) ExecuteWhyCommand(update tgbotapi.Update) {
         }
     }
 
-    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "why.jpg")
+    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "why.gif")
     bot.API.Send(doc)
 }
 
