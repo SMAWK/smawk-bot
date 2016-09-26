@@ -91,6 +91,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
             bot.ExecuteCurseCommand(update, cmd)
         } else if (cmd[0] == "/splash" || cmd[0] == "/splash@smawk_bot") {
             bot.ExecuteSplashCommand(update)
+        } else if (cmd[0] == "/why" || cmd[0] == "/why@smawk_bot") {
+            bot.ExecuteWhyCommand(update)
         }
     }
 }
@@ -382,6 +384,27 @@ func (bot *SmawkBot) ExecuteSplashCommand(update tgbotapi.Update) {
     msg_string2 := "... but nothing happened!"
     msg2 := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string2)
     bot.API.Send(msg2)
+}
+
+func (bot *SmawkBot) ExecuteWhyCommand(update tgbotapi.Update) {
+    // Make sure that we have the hype command in our working directory
+    if _, err := os.Stat("why.jpg"); os.IsNotExist(err) {
+        // NOOOO!!!! WE DON'T HAVE THE IMAGE!!!!!
+        // Fetch it from the SMAWK source
+        cmdname := "curl"
+        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/why.jpg"}
+
+        cmd := exec.Command(cmdname,cmdargs...)
+        var stderr bytes.Buffer
+        cmd.Stderr = &stderr
+        err := cmd.Run()
+        if err != nil {
+            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+        }
+    }
+
+    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "why.jpg")
+    bot.API.Send(doc)
 }
 
 /* ================================================ */
