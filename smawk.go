@@ -419,7 +419,7 @@ func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) {
     } else if len(cmd) >= 2 {
         phrase := strings.Join(cmd[1:]," ")
         msg_string := update.Message.From.UserName+" "+phrase
-        msg := tgbotapi.NewMessage("-9125034", msg_string)
+        msg := tgbotapi.NewMessage(-9125034, msg_string)
         bot.API.Send(msg)
     }
 }
