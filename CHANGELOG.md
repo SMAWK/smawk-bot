@@ -31,3 +31,7 @@ Please use the following format when you update the changelog:
 - Adds Scoring
 - Adds Upvoting
 - Adds Downvoting
+
+####2016-10-07 - bmatt468
+- Fixes scoring between chats
+- Adds a lovely 3rd person view
