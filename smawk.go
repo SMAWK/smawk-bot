@@ -190,7 +190,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
         bot.API.Send(msg)
     } else if len(cmd) == 2 {
         var total_points sql.NullString
-        err = db.QueryRow("SELECT SUM(s.point) FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username=?", cmd[1]).Scan(&total_points)
+        err = db.QueryRow("SELECT SUM(s.point) FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username=? AND s.chat_id=?", cmd[1],strconv.FormatInt(update.Message.Chat.ID,10)).Scan(&total_points)
         if err != nil {
                 log.Fatal(err)
         } else if err == sql.ErrNoRows || !total_points.Valid {
@@ -202,7 +202,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
 
         msg_string := cmd[1]+" has "+total_points.String+" points, of which:\n"
 
-        users, err := db.Query("SELECT SUM(s.point) as points, s.reason FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username = '"+cmd[1]+"' GROUP BY s.reason")
+        users, err := db.Query("SELECT SUM(s.point) as points, s.reason FROM scores s JOIN users u ON s.user_id = u.id WHERE s.chat_id = "+strconv.FormatInt(update.Message.Chat.ID,10)+" AND u.username = '"+cmd[1]+"' GROUP BY s.reason")
         if err != nil {
                 log.Fatal(err)
         }
