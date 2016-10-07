@@ -93,6 +93,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
             bot.ExecuteSplashCommand(update)
         } else if (cmd[0] == "/why" || cmd[0] == "/why@smawk_bot") {
             bot.ExecuteWhyCommand(update)
+        } else if (cmd[0] == "/smawk" || cmd[0] == "/smawk@smawk_bot") {
+            bot.ExecuteSMAWKCommand(update, cmd)
         }
     }
 }
@@ -406,6 +408,20 @@ func (bot *SmawkBot) ExecuteWhyCommand(update tgbotapi.Update) {
 
     doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "why.gif")
     bot.API.Send(doc)
+}
+
+func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) {
+    if len(cmd) == 1 {
+        // Wrong Usage
+        msg_string := "Correct Usage: /smawk <phrase>"
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+    } else if len(cmd) >= 2 {
+        phrase := strings.Join(cmd[1:]," ")
+        msg_string := update.Message.From.UserName+" "+phrase
+        msg := tgbotapi.NewMessage(/*"-9125034"*/update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+    }
 }
 
 /* ================================================ */
