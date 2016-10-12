@@ -35,3 +35,6 @@ Please use the following format when you update the changelog:
 ####2016-10-07 - bmatt468
 - Fixes scoring between chats
 - Adds a lovely 3rd person view
+
+####2016-10-12 - bmatt468
+- File refactor
