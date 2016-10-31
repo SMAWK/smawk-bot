@@ -31,7 +31,7 @@ func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
         // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
         // Fetch it from the SMAWK source
         cmdname := "curl"
-        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/hype.gif"}
+        cmdargs := []string{"-O","http://benjaminrmatthews.com/img/smawk-bot/hype.gif"}
 
         cmd := exec.Command(cmdname,cmdargs...)
         var stderr bytes.Buffer
@@ -52,7 +52,7 @@ func (bot *SmawkBot) ExecuteWhatchuDidThereCommand(update tgbotapi.Update) {
         // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
         // Fetch it from the SMAWK source
         cmdname := "curl"
-        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/whoa.gif"}
+        cmdargs := []string{"-O","http://benjaminrmatthews.com/img/smawk-bot/whoa.gif"}
 
         cmd := exec.Command(cmdname,cmdargs...)
         var stderr bytes.Buffer
@@ -305,7 +305,7 @@ func (bot *SmawkBot) ExecuteWhyCommand(update tgbotapi.Update) {
         // NOOOO!!!! WE DON'T HAVE THE IMAGE!!!!!
         // Fetch it from the SMAWK source
         cmdname := "curl"
-        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/why.gif"}
+        cmdargs := []string{"-O","http://benjaminrmatthews.com/img/smawk-bot/why.gif"}
 
         cmd := exec.Command(cmdname,cmdargs...)
         var stderr bytes.Buffer
