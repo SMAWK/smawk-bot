@@ -88,6 +88,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
             bot.ExecuteSMAWKCommand(update, cmd)
         } else if (cmd[0] == "/me" || cmd[0] == "/me@smawk_bot") {
             bot.ExecuteSMAWKCommand(update, cmd)
+        } else if (cmd[0] == "/dapun" || cmd[0] == "/dapun@smawk_bot") {
+            bot.ExecuteDaPunCommand(update, cmd)
         }
     }
 }

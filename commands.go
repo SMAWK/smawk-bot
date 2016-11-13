@@ -67,6 +67,27 @@ func (bot *SmawkBot) ExecuteWhatchuDidThereCommand(update tgbotapi.Update) {
     bot.API.Send(doc)
 }
 
+func (bot *SmawkBot) ExecuteDaPunCommand(update tgbotapi.Update) {
+    // Make sure that we have the hype command in our working directory
+    if _, err := os.Stat("puns.gif"); os.IsNotExist(err) {
+        // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
+        // Fetch it from the SMAWK source
+        cmdname := "curl"
+        cmdargs := []string{"-O","http://benjaminrmatthews.com/img/smawk-bot/puns.gif"}
+
+        cmd := exec.Command(cmdname,cmdargs...)
+        var stderr bytes.Buffer
+        cmd.Stderr = &stderr
+        err := cmd.Run()
+        if err != nil {
+            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+        }
+    }
+
+    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "puns.gif")
+    bot.API.Send(doc)
+}
+
 func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
     // Connect to our database
     db, err := ConnectDB()
