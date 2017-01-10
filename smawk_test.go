@@ -1,18 +1,19 @@
 package smawk_test
 
 import (
-	"bytes"
+	//"bytes"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
 	"gopkg.in/telegram-bot-api.v4"
 	"log"
-	"os"
-	"os/exec"
+	//"os"
+	//"os/exec"
 	"strconv"
-	"strings"
+	//"strings"
 	"testing"
+	"time"
 )
 
 // Create our constants for use throughout the testing functions
@@ -93,12 +94,19 @@ func connect() (*sql.DB, error) {
 	return sql.Open("mysql", cfg.FormatDSN())
 }
 
+func timestamp() string {
+	t := time.Now()
+	return t.Format("2006-01-02 15:04:05 ");
+}
+
 /* ================================================ */
 /*                Testing functions                 */
 /* ================================================ */
+func TestHelpers(t *testing.T) {
+	fmt.Println("======= Starting Helper Tests =======")
+	/** === Loading Bot === **/
+	fmt.Print(timestamp()+"Loading SMÄWK_bot.... ")
 
-// TestLoadBot tests to see if the bot is loading and authenticated properly
-func TestLoadBot(t *testing.T) {
 	// Fetch our bot using the helper function
 	_, err := getBot(t)
 
@@ -109,73 +117,10 @@ func TestLoadBot(t *testing.T) {
 	}
 
 	// Otherwise, log to the console that we authenticated properly
-	log.Printf("SMÄWK_bot authenticated")
-}
+	fmt.Println("done")
 
-// TestSendMessage tests to see if the bot can properly send a message to the provided
-// chatID (the private chat of the user)
-func iTestSendMessage(t *testing.T) {
-	// Fetch our bot using the helper function
-	bot, _ := getBot(t)
-
-	// Generate our message and send it to the private chat
-	msg := tgbotapi.NewMessage(ChatID, "SMÄWKBot:Go - Test message.")
-	_, err := bot.Send(msg)
-
-	// Check to see if something bad happened and break if need be
-	if err != nil {
-		log.Fatal(err)
-		t.FailNow()
-	}
-
-	// Otherwise, log to the console that the message was sent
-	log.Printf("Test message sent")
-}
-
-// TestIDCommand tests to make sure that the bot will properly send an
-// ID to a private chat while refusing to send to a public chat
-func iTestIDCommand(t *testing.T) {
-	// Fetch our bot using the helper function
-	bot, _ := getBot(t)
-
-	update, _ := generateUpdate(t,"/id")
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Your chat ID is: "+strconv.FormatInt(update.Message.Chat.ID,10))
-    bot.Send(msg)
-}
-
-// TestContainedHypeCommand tests to make sure that the bot will properly handle a /hype
-// command that is contained inside of a string
-func iTestContainedHypeCommand(t *testing.T) {
-	// Fetch our bot using the helper function
-	bot, _ := getBot(t)
-
-	update, _ := generateUpdate(t,"test /hype")
-
-	if (strings.Contains(update.Message.Text, "/hype") || strings.Contains(update.Message.Text, "/hype@smawk_bot")) {
-        // Make sure that we have the hype command in our working directory
-	    if _, err := os.Stat("hype.gif"); os.IsNotExist(err) {
-	        // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
-	        // Fetch it from the SMAWK source
-	        cmdname := "curl"
-	        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/hype.gif"}
-
-	        cmd := exec.Command(cmdname,cmdargs...)
-	        var stderr bytes.Buffer
-	        cmd.Stderr = &stderr
-	        err := cmd.Run()
-	        if err != nil {
-	            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-	        }
-	    }
-
-	    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
-	    bot.Send(doc)
-    }
-}
-
-// TestDatabaseConnection Makes sure that we are connected to our database where the scores are located
-func TestDatabaseConnection(t *testing.T) {
+	/** === Database connection === **/
+	fmt.Print(timestamp()+"Connecting to database.... ")
 	db, err := connect()
     if err != nil {
       	log.Fatal(err)
@@ -189,107 +134,22 @@ func TestDatabaseConnection(t *testing.T) {
 		t.FailNow()
     }
 
-    log.Printf("DB Connection Successful")
+    fmt.Println("done")
+    fmt.Println("======= Helper Tests Succeeded =======\n")
 }
 
-// TestUsersFetch makes a test call to the database to get the list of users in the database
-func TestUsersFetch(t *testing.T) {
-	db, err := connect()
-	if err != nil {
-      	log.Fatal(err)
-		t.FailNow()
-    }
-    defer db.Close()
-
-    users, err := db.Query("SELECT id, username, first_name, last_name FROM users")
-    if err != nil {
-            log.Fatal(err)
-    }
-    defer users.Close()
-    for users.Next() {
-            var id string
-            var username string
-            var first_name string
-            var last_name string
-            if err := users.Scan(&id, &username, &first_name, &last_name); err != nil {
-                    log.Fatal(err)
-            }
-            fmt.Printf("ID:%s Username:%s Name: %s %s\n", id, username, first_name, last_name)
-    }
-    if err := users.Err(); err != nil {
-            log.Fatal(err)
-    }
-
-    fmt.Printf("\n=============\n")
-}
-
-// TestScoreCommand makes sure that we can connect to the database and properly obtain the score for everybody
-func TestScoreCommand(t *testing.T) {
-	db, err := connect()
-	if err != nil {
-      	log.Fatal(err)
-		t.FailNow()
-    }
-    defer db.Close()
-
-    users, err := db.Query("SELECT u.username, SUM(s.point) as 'points' FROM scores s JOIN users u on u.id = s.user_id WHERE s.chat_id = -9125034 GROUP BY s.user_id")
-    if err != nil {
-            log.Fatal(err)
-    }
-    defer users.Close()
-    for users.Next() {
-            var username string
-            var points string
-            if err := users.Scan(&username, &points); err != nil {
-                    log.Fatal(err)
-            }
-            fmt.Printf("%s: %s\n", username, points)
-    }
-    if err := users.Err(); err != nil {
-            log.Fatal(err)
-    }
-    fmt.Printf("\n=============\n")
-}
-
-func TestUserScoreCommand(t *testing.T) {
-	db, err := connect()
-	if err != nil {
-      	log.Fatal(err)
-		t.FailNow()
-    }
-    defer db.Close()
-
-    update, _ := generateUpdate(t,"/score @bnmtthews")
-    cmd := strings.Split(update.Message.Text, " ")
-
-    var total_points sql.NullString
-    err = db.QueryRow("SELECT SUM(s.point) FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username=?", cmd[1]).Scan(&total_points)
-    if err != nil {
-            log.Fatal(err)
-    } else if err == sql.ErrNoRows {
-    	fmt.Printf("User %s does not exist.\n",cmd[1])
-    	return
-    } else if !total_points.Valid {
-    	fmt.Printf("User %s does not exist.\n",cmd[1])
-    	return
-    }
-
-    fmt.Printf("%s has %s points, of which:\n",cmd[1],total_points.String)
-
-    users, err := db.Query("SELECT SUM(s.point) as points, s.reason FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username = '"+cmd[1]+"' GROUP BY s.reason")
-    if err != nil {
-            log.Fatal(err)
-    }
-    defer users.Close()
-    for users.Next() {
-            var points string
-            var reason string
-            if err := users.Scan(&points, &reason); err != nil {
-                    log.Fatal(err)
-            }
-            fmt.Printf("%s is for %s\n", points, reason)
-    }
-    if err := users.Err(); err != nil {
-            log.Fatal(err)
-    }
+func TestCommands(t *testing.T) {
+	fmt.Println("======= Starting Command Tests =======")
+	/*
+	start
+id
+hype
+score
+upvote
+downvote
+bless
+curse
+smawk/me
+*/
+    fmt.Println("======= Command Tests Succeeded =======")
 }

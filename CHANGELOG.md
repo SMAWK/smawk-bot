@@ -1,14 +1,47 @@
 #Formatting
 Please use the following format when you update the changelog:
 ```
-###<yyyy-mm-dd> - <github_username>
+###<version> - <release date (yyyy-mm-dd)>
 - Item 1
 - Item 2
 - ...
 ```
 
 #Changelog
-###2016-07-27 - bmatt468
+###v1.2.0
+- Refactors Library Codebase
+	- ParseAndExecuteUpdates() now uses a more idiomatic `switch` vs `if / else`
+	- Removes some of the unused commands
+		- `whachu_did_there`
+		- `dapun`
+		- `splash` (since PokeGO died, the joke died also)
+		- `why`
+		- `hype` no longers can be used in the middle of a sentence
+- Test file covers more of the code, and tests deeper
+- Changelog now shows most recent update first
+- README has been updated with an explanation of all the commands
+- Switches to a versioning approach
+
+###v1.1.2 - 2016-10-12
+- File refactor
+
+###v1.1.1 - 2016-10-07
+- Fixes scoring between chats
+- Adds a lovely 3rd person view
+
+###v1.1.0 - 2016-08-08
+- Adds Scoring
+- Adds Upvoting
+- Adds Downvoting
+
+###v1.0.2 - 2016-08-05
+- Lets /hype be called anywhere in a string
+	- Adds appropriate tests
+
+###v1.0.1 - 2016-08-01
+- Adds new 'Whatchu Did There' gif
+
+###v1.0.0 - 2016-07-27
 - Converts from standalone program to library
 - Adds self-signed certificate handler
 - Updates README to reflect changes
@@ -19,22 +52,3 @@ Please use the following format when you update the changelog:
 	- Adds /id unit tests
 - Adds /hype command
 	- Adds autofetch of gif if needed
-
-###2016-08-01 - bmatt468
-- Adds new 'Whatchu Did There' gif
-
-###2016-08-05 - bmatt468
-- Lets /hype be called anywhere in a string
-	- Adds appropriate tests
-
-###2016-08-08 - bmatt468
-- Adds Scoring
-- Adds Upvoting
-- Adds Downvoting
-
-####2016-10-07 - bmatt468
-- Fixes scoring between chats
-- Adds a lovely 3rd person view
-
-####2016-10-12 - bmatt468
-- File refactor

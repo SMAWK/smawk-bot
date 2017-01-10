@@ -1,4 +1,4 @@
-# SMÄWKBot (a.k.a smawk_bot)
+# SMÄWKBot (a.k.a smawk_bot) v1.5.0
 This bot was written for a telegram group chat where several nerdy guys hang out. It was built (and is primary maintained) by [bmatt468](https://github.com/orgs/SMAWK/people/bmatt468) as a learning project / sandbox for Google Go.
 
 # Getting Started
@@ -57,6 +57,51 @@ go install
 <binary_name> #Generally this is just <controller_repo>
 ```
 
+#Commands
+###/start
+`/start` is used to start the bot in a chat (both group and personal). It is a command that is required by Telegram; when run, it will return a message to the chat if it started successfully.
+
+###/id
+`id` can only be used in a personal chat. It will return your unique chat ID; this ID is helpful if you want to do work on your own instance of the bot.
+
+###/hype
+`/hype` returns the most-hyped-up gif of 2016. You just have to see it to believe it.
+
+###/score
+`/score` will display the current score of everyone in the chat (ordered by points). If you provide the optional username parameter, it will output the specific reasons for that users score (again, ordered by points)
+
+Usage: `/score [<user>]`
+
+
+###/upvote
+`/upvote` is the command to give a user points. A username is required for the command to work, and you are allowed to add an optional reason (should you desire)
+
+Usage: `/upvote <user> [<reason>]`
+
+
+###/downvote
+`/downvote` is the command to take points away from a user. You must provide a username for a person, but the reason for your downvote is optional.
+
+Usage: `/downvote <user> [<reason>]`
+
+
+###/bless
+`/bless` is a special command that is reserved for the 'clergy' (a.k.a. the people ordained by the church of dude). It grants 3 points to the user of choice.
+
+Usage: `/bless <user>`
+
+###/curse
+`/curse` is another special command that is reserved for the 'clergy'. It takes 3 points from a user of choice.
+
+Usage: `/curse <user>`
+
+###/smawk or /me
+`/smawk` or `/me` is a special command that can only be executed from a private chat (and only by a member of SMÄWK). When run, it will print a message in the group chat in third-person.
+
+Usage: `/smawk <statement>`
+
+Example: `/smawk sigh` would output `<username> sighs` in the group chat.
+
 # Adding Features
 Any command will have an assigned controller function attached to it. These functions should be placed together inside of `smawk.go`. Please look at how the other commands are called, and replicate that style.
 
@@ -78,10 +123,6 @@ Testing the bot is as easy as calling `go test` from the command line of the `sm
 Note: The results of the test command will be sent to the chat id specified by the `ChatID` const inside `smawk-test.go` (Approx. line 14). Currently, this ID is set to be the personal chat between [@bmatt468](https://github.com/orgs/SMAWK/people/bmatt468) and SMÄWKBot. When you test, please change this ID to match the ID of your personal chat with the bot. Your chat id can be obtained by calling starting a private chat with the bot (use the search bar or the group chat) and then typing `/id` into the chat. The bot will respond with your personal chat ID. Please note that this command will not work in a group chat.
 
 For more info about testing, see the official Golang docs [here](https://golang.org/pkg/testing/).
-
-# To-Do
-- Handle Webhooks Without Cert
-- Handle Non-webhook update fetching
 
 #Changelog
 Changelog can be viewed [here](CHANGELOG.md)

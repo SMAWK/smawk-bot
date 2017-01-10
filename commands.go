@@ -10,7 +10,6 @@ import (
     "os/exec"
     "strconv"
     "strings"
-    "time"
 )
 
 func (bot *SmawkBot) ExecuteStartCommand(update tgbotapi.Update) {
@@ -21,6 +20,30 @@ func (bot *SmawkBot) ExecuteStartCommand(update tgbotapi.Update) {
 func (bot *SmawkBot) ExecuteIDCommand(update tgbotapi.Update) {
     if update.Message.Chat.Type == "private" {
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Your chat ID is: "+strconv.FormatInt(update.Message.Chat.ID,10))
+        bot.API.Send(msg)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) {
+    if len(cmd) == 1 {
+        // Wrong Usage
+        msg_string := "Correct Usage: /smawk <phrase>"
+        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+        bot.API.Send(msg)
+    } else if len(cmd) >= 2 {
+        phrase := strings.Join(cmd[1:]," ")
+        msg_string := update.Message.From.UserName+" "+phrase
+        msg := tgbotapi.NewMessage(-9125034, msg_string)
         bot.API.Send(msg)
     }
 }
@@ -43,48 +66,6 @@ func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
     }
 
     doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
-    bot.API.Send(doc)
-}
-
-func (bot *SmawkBot) ExecuteWhatchuDidThereCommand(update tgbotapi.Update) {
-    // Make sure that we have the hype command in our working directory
-    if _, err := os.Stat("whoa.gif"); os.IsNotExist(err) {
-        // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
-        // Fetch it from the SMAWK source
-        cmdname := "curl"
-        cmdargs := []string{"-O","http://www.benjaminrmatthews.com/img/smawk-bot/whoa.gif"}
-
-        cmd := exec.Command(cmdname,cmdargs...)
-        var stderr bytes.Buffer
-        cmd.Stderr = &stderr
-        err := cmd.Run()
-        if err != nil {
-            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-        }
-    }
-
-    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "whoa.gif")
-    bot.API.Send(doc)
-}
-
-func (bot *SmawkBot) ExecuteDaPunCommand(update tgbotapi.Update) {
-    // Make sure that we have the hype command in our working directory
-    if _, err := os.Stat("puns.gif"); os.IsNotExist(err) {
-        // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
-        // Fetch it from the SMAWK source
-        cmdname := "curl"
-        cmdargs := []string{"-O","http://www.benjaminrmatthews.com/img/smawk-bot/puns.gif"}
-
-        cmd := exec.Command(cmdname,cmdargs...)
-        var stderr bytes.Buffer
-        cmd.Stderr = &stderr
-        err := cmd.Run()
-        if err != nil {
-            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-        }
-    }
-
-    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "puns.gif")
     bot.API.Send(doc)
 }
 
@@ -304,53 +285,6 @@ func (bot *SmawkBot) ExecuteCurseCommand(update tgbotapi.Update, cmd []string) {
     } else {
         msg_string := "The power of cursing has not been bestowed upon you"
         msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-        bot.API.Send(msg)
-    }
-}
-
-func (bot *SmawkBot) ExecuteSplashCommand(update tgbotapi.Update) {
-    msg_string := "@"+update.Message.From.UserName+" used splash....."
-    msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-    bot.API.Send(msg)
-
-    duration := time.Duration(5)*time.Second
-    time.Sleep(duration)
-    msg_string2 := "... but nothing happened!"
-    msg2 := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string2)
-    bot.API.Send(msg2)
-}
-
-func (bot *SmawkBot) ExecuteWhyCommand(update tgbotapi.Update) {
-    // Make sure that we have the hype command in our working directory
-    if _, err := os.Stat("why.gif"); os.IsNotExist(err) {
-        // NOOOO!!!! WE DON'T HAVE THE IMAGE!!!!!
-        // Fetch it from the SMAWK source
-        cmdname := "curl"
-        cmdargs := []string{"-O","http://www.benjaminrmatthews.com/img/smawk-bot/why.gif"}
-
-        cmd := exec.Command(cmdname,cmdargs...)
-        var stderr bytes.Buffer
-        cmd.Stderr = &stderr
-        err := cmd.Run()
-        if err != nil {
-            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-        }
-    }
-
-    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "why.gif")
-    bot.API.Send(doc)
-}
-
-func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) {
-    if len(cmd) == 1 {
-        // Wrong Usage
-        msg_string := "Correct Usage: /smawk <phrase>"
-        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-        bot.API.Send(msg)
-    } else if len(cmd) >= 2 {
-        phrase := strings.Join(cmd[1:]," ")
-        msg_string := update.Message.From.UserName+" "+phrase
-        msg := tgbotapi.NewMessage(-9125034, msg_string)
         bot.API.Send(msg)
     }
 }

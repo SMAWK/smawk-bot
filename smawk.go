@@ -59,37 +59,31 @@ func (bot *SmawkBot) Listen(token string) <-chan tgbotapi.Update {
     return updates
 }
 
+// ParseAndExecuteUpdate takes in the Update struct from the API,
+// and isolates the command and arguments, then passes the information
+// on to the proper method
 func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
     if update.Message.Text != "" {
-        cmd := strings.Split(update.Message.Text, " ")
-        if (cmd[0] == "/start" || cmd[0] == "/start@smawk_bot") {
-            bot.ExecuteStartCommand(update)
-        } else if (cmd[0] == "/id" || cmd[0] == "/id@smawk_bot") {
-            bot.ExecuteIDCommand(update)
-        } else if (cmd[0] == "/hype" || cmd[0] == "/hype@smawk_bot" || strings.Contains(update.Message.Text, "/hype") || strings.Contains(update.Message.Text, "/hype@smawk_bot")) {
-            bot.ExecuteHypeCommand(update)
-        } else if (cmd[0] == "/whatchu_did_there" || cmd[0] == "/whatchu_did_there@smawk_bot") {
-            bot.ExecuteWhatchuDidThereCommand(update)
-        } else if (cmd[0] == "/score" || cmd[0] == "/score@smawk_bot") {
-            bot.ExecuteScoreCommand(update, cmd)
-        } else if (cmd[0] == "/upvote" || cmd[0] == "/upvote@smawk_bot") {
-            bot.ExecuteUpvoteCommand(update, cmd)
-        } else if (cmd[0] == "/downvote" || cmd[0] == "/downvote@smawk_bot") {
-            bot.ExecuteDownvoteCommand(update, cmd)
-        } else if (cmd[0] == "/bless" || cmd[0] == "/bless@smawk_bot") {
-            bot.ExecuteBlessCommand(update, cmd)
-        } else if (cmd[0] == "/curse" || cmd[0] == "/curse@smawk_bot") {
-            bot.ExecuteCurseCommand(update, cmd)
-        } else if (cmd[0] == "/splash" || cmd[0] == "/splash@smawk_bot") {
-            bot.ExecuteSplashCommand(update)
-        } else if (cmd[0] == "/why" || cmd[0] == "/why@smawk_bot") {
-            bot.ExecuteWhyCommand(update)
-        } else if (cmd[0] == "/smawk" || cmd[0] == "/smawk@smawk_bot") {
-            bot.ExecuteSMAWKCommand(update, cmd)
-        } else if (cmd[0] == "/me" || cmd[0] == "/me@smawk_bot") {
-            bot.ExecuteSMAWKCommand(update, cmd)
-        } else if (cmd[0] == "/dapun" || cmd[0] == "/dapun@smawk_bot") {
-            bot.ExecuteDaPunCommand(update)
+        // Get the command and remove the trailing '@smawk_bot' (if it exists)
+        switch cmd := strings.Split(update.Message.Text, " "); strings.Replace(cmd[0],"@smawk_bot","",-1) {
+            case "/start":
+                bot.ExecuteStartCommand(update)
+            case "/id":
+                bot.ExecuteIDCommand(update)
+            case "/smawk", "/me":
+                bot.ExecuteSMAWKCommand(update, cmd)
+            case "/hype":
+                bot.ExecuteHypeCommand(update)
+            case "/score":
+                bot.ExecuteScoreCommand(update, cmd)
+            case "/upvote":
+                bot.ExecuteUpvoteCommand(update, cmd)
+            case "/downvote":
+                bot.ExecuteDownvoteCommand(update, cmd)
+            case "/bless":
+                bot.ExecuteBlessCommand(update, cmd)
+            case "/curse":
+                bot.ExecuteCurseCommand(update, cmd)
         }
     }
 }
