@@ -100,7 +100,7 @@ Usage: `/curse <user>`
 
 Usage: `/smawk <statement>`
 
-Example: `/smawk sigh` would output `<username> sighs` in the group chat.
+Example: `/smawk sighs` would output `<username> sighs` in the group chat.
 
 # Adding Features
 Any command will have an assigned controller function attached to it. These functions should be placed together inside of `smawk.go`. Please look at how the other commands are called, and replicate that style.

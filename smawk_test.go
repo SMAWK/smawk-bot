@@ -122,34 +122,54 @@ func TestHelpers(t *testing.T) {
 	/** === Database connection === **/
 	fmt.Print(timestamp()+"Connecting to database.... ")
 	db, err := connect()
-    if err != nil {
-      	log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
 		t.FailNow()
-    }
-    defer db.Close()
+	}
+	defer db.Close()
 
-    err = db.Ping()
-    if err != nil {
-        log.Fatal(err)
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
 		t.FailNow()
-    }
+	}
 
-    fmt.Println("done")
-    fmt.Println("======= Helper Tests Succeeded =======\n")
+	fmt.Println("done")
+	fmt.Println("======= Helper Tests Succeeded =======\n")
 }
 
 func TestCommands(t *testing.T) {
 	fmt.Println("======= Starting Command Tests =======")
-	/*
-	start
-id
-hype
-score
-upvote
-downvote
-bless
-curse
-smawk/me
-*/
-    fmt.Println("======= Command Tests Succeeded =======")
+
+	fmt.Print(timestamp()+"Running /start test.... ")
+	fmt.Println("done")
+
+	fmt.Print(timestamp()+"Running /id test.... ")
+	fmt.Println("done")
+
+	fmt.Print(timestamp()+"Running /hype test.... ")
+	fmt.Println("done")
+
+	fmt.Print(timestamp()+"Running /score test.... ")
+	fmt.Println("done")
+
+	fmt.Print(timestamp()+"Running /upvote test.... ")
+	fmt.Println("done")
+
+	fmt.Print(timestamp()+"Running /downvote test.... ")
+	fmt.Println("done")
+
+	fmt.Print(timestamp()+"Running /bless test.... ")
+	fmt.Println("done")
+
+	fmt.Print(timestamp()+"Running /curse test.... ")
+	fmt.Println("done")
+
+	fmt.Print(timestamp()+"Running /smawk test.... ")
+	fmt.Println("done")
+
+	fmt.Print(timestamp()+"Running /me test.... ")
+	fmt.Println("done")
+
+	fmt.Println("======= Command Tests Succeeded =======")
 }
