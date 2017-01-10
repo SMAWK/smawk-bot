@@ -1,5 +1,5 @@
 # SMÄWKBot (a.k.a smawk_bot)
-###A Telegram Bot for the Almighty ~~She Mans Woman Haters Club~~ SMÄWK
+This bot was written for a telegram group chat where several nerdy guys hang out. It was built (and is primary maintained) by [bmatt468](https://github.com/orgs/SMAWK/people/bmatt468) as a learning project / sandbox for Google Go.
 
 # Getting Started
 SMÄWKBot is written in Golang / Go. Therefore, the first step to working on this bot is [setting up Go](https://golang.org/doc/install).
