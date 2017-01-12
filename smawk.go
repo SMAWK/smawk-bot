@@ -9,6 +9,8 @@ import (
 // BotAPI allows you to interact with the Telegram Bot API.
 type SmawkBot struct {
 	API *tgbotapi.BotAPI
+	Debug bool
+	Testing bool
 }
 
 // Connect takes a provided access token, and returns a pointer
@@ -36,6 +38,7 @@ func Connect(tkn string, debug bool) (*SmawkBot, error) {
 	// Create the SmawkBot
 	sbot := &SmawkBot {
 		API: bot,
+		Debug: debug,
 	}
 
 	// Return our bot back to the caller
@@ -62,16 +65,17 @@ func (bot *SmawkBot) Listen(token string) <-chan tgbotapi.Update {
 // ParseAndExecuteUpdate takes in the Update struct from the API,
 // and isolates the command and arguments, then passes the information
 // on to the proper method
-func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
+func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{}, error) {
 	if update.Message.Text != "" {
 		// Get the command and remove the trailing '@smawk_bot' (if it exists)
 		switch cmd := strings.Split(update.Message.Text, " "); strings.Replace(cmd[0],"@smawk_bot","",-1) {
 			case "/start":
-				bot.ExecuteStartCommand(update)
+				return bot.ExecuteStartCommand(update)
 			case "/id":
-				bot.ExecuteIDCommand(update)
+				return bot.ExecuteIDCommand(update)
 			case "/smawk", "/me":
-				bot.ExecuteSMAWKCommand(update, cmd)
+				return bot.ExecuteSMAWKCommand(update, cmd)
+
 			case "/hype":
 				bot.ExecuteHypeCommand(update)
 			case "/score":
@@ -86,4 +90,6 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
 				bot.ExecuteCurseCommand(update, cmd)
 		}
 	}
+
+	return nil, nil
 }

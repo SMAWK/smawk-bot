@@ -12,41 +12,68 @@ import (
 	"strings"
 )
 
-func (bot *SmawkBot) ExecuteStartCommand(update tgbotapi.Update) {
+// ExecuteStartCommand is launched when the bot is started, and sends a message to the chat that started it
+func (bot *SmawkBot) ExecuteStartCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
+	// Create our message and send it to the chat that started the bot.
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Lo, the official SMÄWKBot rises!")
-	bot.API.Send(msg)
+
+	// Send the message
+	return bot.API.Send(msg)
 }
 
-func (bot *SmawkBot) ExecuteIDCommand(update tgbotapi.Update) {
+// ExecuteIDCommand returns the ID of a chat to the person that called this command.
+// This command is only available on a private chat
+func (bot *SmawkBot) ExecuteIDCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
+	// Check to see if the chat is a private chat
 	if update.Message.Chat.Type == "private" {
+		// Generate a message that contains the ID of our chat
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Your chat ID is: "+strconv.FormatInt(update.Message.Chat.ID,10))
-		bot.API.Send(msg)
+
+		// Send the message
+		return bot.API.Send(msg)
 	}
+
+	return tgbotapi.Message{}, nil
+}
+
+// ExecuteSMAWKCommand is the command that is used to have 'third person' conversations inside
+// of the SMAWK group chat. It is reserved for members of SMAWK only
+func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
+	// Check to see if the user that called this command is actually a member of SMAWK
+	// If so, go ahead and send the message
+	if true {
+		// Look to see if the command was executed successfully
+		switch len(cmd) {
+			// Wrong Usage
+			case 1:
+				// Create our message with the instructions
+				msg_string := "Correct Usage: /smawk <phrase>"
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+
+				// Send the message
+				return bot.API.Send(msg)
+
+			// Correct Usage (len(cmd) >= 2)
+			default:
+				// Take what we said and turn it into a phrase
+				phrase := strings.Join(cmd[1:]," ")
+				msg_string := update.Message.From.UserName+" "+phrase
+
+				// Create our message and prepare to send it to the SMAWK chat
+				msg := tgbotapi.NewMessage(-9125034, msg_string)
+
+				// Send off our message
+				return bot.API.Send(msg)
+		}
+	}
+
+	return tgbotapi.Message{}, nil
 }
 
 
 
-
-
-
-
-
-
-
-
-func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) {
-	if len(cmd) == 1 {
-		// Wrong Usage
-		msg_string := "Correct Usage: /smawk <phrase>"
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-		bot.API.Send(msg)
-	} else if len(cmd) >= 2 {
-		phrase := strings.Join(cmd[1:]," ")
-		msg_string := update.Message.From.UserName+" "+phrase
-		msg := tgbotapi.NewMessage(-9125034, msg_string)
-		bot.API.Send(msg)
-	}
-}
+// To Do Below This
+// ====================
 
 func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
 	// Make sure that we have the hype command in our working directory

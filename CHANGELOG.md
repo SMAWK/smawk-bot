@@ -22,6 +22,7 @@ Please use the following format when you update the changelog:
 - README has been updated with an explanation of all the commands
 - Switches to a versioning approach
 - Actually uses tabs like we are supposed to
+- Code is now commented
 
 ###v1.1.2 - 2016-10-12
 - File refactor

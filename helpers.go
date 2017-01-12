@@ -3,12 +3,12 @@ package smawk
 import (
 	"bytes"
 	"database/sql"
-	"encoding/json"
+	//"encoding/json"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
-	"gopkg.in/telegram-bot-api.v4"
+	//"gopkg.in/telegram-bot-api.v4"
 	"os/exec"
-	"strconv"
+	//"strconv"
 )
 
 // GenerateCertificate is used to create a self signed certificate for use with any
