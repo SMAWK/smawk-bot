@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/go-sql-driver/mysql"
 	//"gopkg.in/telegram-bot-api.v4"
+	"log"
 	"os/exec"
 	//"strconv"
 )
@@ -44,4 +45,37 @@ func ConnectDB() (*sql.DB, error) {
 // EnterScore is responsible for updating the database with any upvote, downvote, bless, or curse commands
 func EnterScore() {
 
+}
+
+// IsUser is used to tell if a user that send a chat message is actually a part of SMÄWK proper
+func (bot *SmawkBot) isUser(username string) bool {
+	// Connect to our database
+	db, err := ConnectDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Create our query
+	users, err := db.Query("SELECT username FROM users")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer users.Close()
+
+	for users.Next() {
+		var db_username string
+		if err := users.Scan(&db_username); err != nil {
+			log.Fatal(err)
+		}
+
+		if db_username[1:] == username {
+			return true
+		}
+	}
+	if err := users.Err(); err != nil {
+			log.Fatal(err)
+	}
+
+	return false
 }

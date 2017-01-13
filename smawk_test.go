@@ -153,10 +153,70 @@ func TestBot(t *testing.T) {
 
 	/** === SMAWK Command === **/
 	fmt.Print(timestamp()+"Running /smawk tests.... ")
+	// Check to see if message is returned with proper user
+	upd = GenerateUpdate("/smawk wheeee")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strings.Replace(strText, upd.Message.From.UserName+" ","",-1) != "wheeee" {
+		log.Fatalf("/smawk string mismatch. Expected wheeee - got %s",strText)
+		t.FailNow();
+	}
+
+	// Check to see if response is empty if not a user
+	upd = GenerateUpdate("/smawk fail_plox")
+	upd.Message.From.UserName = "not_bnmtthews"
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	if msg != (tgbotapi.Message{}) {
+		log.Fatalf("/smawk not failing on bad user")
+		t.FailNow();
+	}
+
+	// Make sure phrases work
+	upd = GenerateUpdate("/smawk abc def ghi")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strings.Replace(strText, upd.Message.From.UserName+" ","",-1) != "abc def ghi" {
+		log.Fatalf("/smawk string mismatch. Expected wheeee - got %s",strText)
+		t.FailNow();
+	}
+
 	fmt.Println("done")
 
 	/** === Me Command === **/
 	fmt.Print(timestamp()+"Running /me tests.... ")
+	// Check to see if message is returned with proper user
+	upd = GenerateUpdate("/me wheeee")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strings.Replace(strText, upd.Message.From.UserName+" ","",-1) != "wheeee" {
+		log.Fatalf("/me string mismatch. Expected wheeee - got %s",strText)
+		t.FailNow();
+	}
+
+	// Check to see if response is empty if not a user
+	upd = GenerateUpdate("/me fail_plox")
+	upd.Message.From.UserName = "not_bnmtthews"
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	if msg != (tgbotapi.Message{}) {
+		log.Fatalf("/me not failing on bad user")
+		t.FailNow();
+	}
+
+	// Make sure phrases work
+	upd = GenerateUpdate("/me abc def ghi")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strings.Replace(strText, upd.Message.From.UserName+" ","",-1) != "abc def ghi" {
+		log.Fatalf("/me string mismatch. Expected wheeee - got %s",strText)
+		t.FailNow();
+	}
+
 	fmt.Println("done")
 
 

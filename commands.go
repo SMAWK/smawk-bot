@@ -41,7 +41,7 @@ func (bot *SmawkBot) ExecuteIDCommand(update tgbotapi.Update) (tgbotapi.Message,
 func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
 	// Check to see if the user that called this command is actually a member of SMAWK
 	// If so, go ahead and send the message
-	if true {
+	if bot.isUser(update.Message.From.UserName) {
 		// Look to see if the command was executed successfully
 		switch len(cmd) {
 			// Wrong Usage
@@ -55,6 +55,18 @@ func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) (
 
 			// Correct Usage (len(cmd) >= 2)
 			default:
+				// Look to see if we are in test mode. If so we don't want to send the command to actual smawk
+				if bot.Testing {
+					phrase := strings.Join(cmd[1:]," ")
+					msg_string := update.Message.From.UserName+" "+phrase
+
+					// Create our message and prepare to send it to the SMAWK chat
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+
+					// Send off our message
+					return bot.API.Send(msg)
+				}
+
 				// Take what we said and turn it into a phrase
 				phrase := strings.Join(cmd[1:]," ")
 				msg_string := update.Message.From.UserName+" "+phrase

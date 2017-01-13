@@ -1,4 +1,4 @@
-# SMÄWKBot (a.k.a smawk_bot) v1.2.0
+# SMÄWKBot (a.k.a smawk_bot) v2.0.0
 This bot was written for a telegram group chat where several nerdy guys hang out. It was built (and is primary maintained) by [bmatt468](https://github.com/bmatt468) as a learning project / sandbox for Google Go.
 
 # Getting Started
