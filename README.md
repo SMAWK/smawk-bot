@@ -1,5 +1,5 @@
-# SMÄWKBot (a.k.a smawk_bot) v1.5.0
-This bot was written for a telegram group chat where several nerdy guys hang out. It was built (and is primary maintained) by [bmatt468](https://github.com/orgs/SMAWK/people/bmatt468) as a learning project / sandbox for Google Go.
+# SMÄWKBot (a.k.a smawk_bot) v1.2.0
+This bot was written for a telegram group chat where several nerdy guys hang out. It was built (and is primary maintained) by [bmatt468](https://github.com/bmatt468) as a learning project / sandbox for Google Go.
 
 # Getting Started
 SMÄWKBot is written in Golang / Go. Therefore, the first step to working on this bot is [setting up Go](https://golang.org/doc/install).
@@ -10,7 +10,7 @@ Once you have taken the steps to understand the nature of Go, you are ready to j
 
 #Setting up the bot
 ###Controllers
-This bot is a [library](https://golang.org/doc/code.html#Library), meaning that it can not run on its own. Rather, it offers methods to be used by an external controller. Most controllers will look nearly 100% the same, there isn't much difference between them. This bot is currently being run by [this controller](https://github.com/bmatt468/smawk-bot). I would recommend visiting that repo and looking through the README to understand the more detailed inner workings of a bot controller. Essentially the controller is responsible for:
+This bot is a [library](https://golang.org/doc/code.html#Library), meaning that it can not run on its own. Rather, it offers methods to be used by an external controller. Most controllers will look nearly 100% the same, there isn't much difference between them. This bot is currently being run by [this controller](https://github.com/bmatt468/smawk-bot-controller). I would recommend visiting that repo and looking through the README to understand the more detailed inner workings of a bot controller. Essentially the controller is responsible for:
 
 - Controlling the access token
 - Opening the webhook
@@ -21,11 +21,11 @@ This bot is a [library](https://golang.org/doc/code.html#Library), meaning that 
 To interface with this API, add the following to the top of your controller:
 ```Go
 import (
-    "github.com/SMAWK/smawk-bot"
+    "github.com/bmatt468/smawk-bot"
 )
 ```
 
-After importing, you can access each of the SMAWK/smawk-bot methods from your controller.
+After importing, you can access each of the bmatt468/smawk-bot methods from your controller.
 
 #Launching the bot
 There are two ways to lauch the bot. One is launching inisde of the controller source, the other is installing a compiled binary and launching there.
@@ -120,7 +120,7 @@ Seeing as we are all human (and not Dr. K), bugs are bound to happen. ~~If~~ Whe
 # Testing
 Testing the bot is as easy as calling `go test` from the command line of the `smawk-bot` working directory. This command will execute all the tests located inside of `smawk-test.go`. The results of the test will be shown on the command line.
 
-Note: The results of the test command will be sent to the chat id specified by the `ChatID` const inside `smawk-test.go` (Approx. line 14). Currently, this ID is set to be the personal chat between [@bmatt468](https://github.com/orgs/SMAWK/people/bmatt468) and SMÄWKBot. When you test, please change this ID to match the ID of your personal chat with the bot. Your chat id can be obtained by calling starting a private chat with the bot (use the search bar or the group chat) and then typing `/id` into the chat. The bot will respond with your personal chat ID. Please note that this command will not work in a group chat.
+Note: The results of the test command will be sent to the chat id specified by the `ChatID` const inside `smawk-test.go` (Approx. line 14). Currently, this ID is set to be the personal chat between [@bmatt468](https://github.com/bmatt468) and SMÄWKBot. When you test, please change this ID to match the ID of your personal chat with the bot. Your chat id can be obtained by calling starting a private chat with the bot (use the search bar or the group chat) and then typing `/id` into the chat. The bot will respond with your personal chat ID. Please note that this command will not work in a group chat.
 
 For more info about testing, see the official Golang docs [here](https://golang.org/pkg/testing/).
 

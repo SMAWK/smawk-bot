@@ -5,7 +5,7 @@ import (
 	//"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/SMAWK/smawk-bot"
+	"github.com/bmatt468/smawk-bot"
 	//"github.com/go-sql-driver/mysql"
 	"gopkg.in/telegram-bot-api.v4"
 	"log"
