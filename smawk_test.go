@@ -224,6 +224,8 @@ func TestBot(t *testing.T) {
 
 	/** === Hype Command === **/
 	fmt.Print(timestamp()+"Running /hype tests.... ")
+	upd = GenerateUpdate("/hype")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
 	fmt.Println("done")
 
 	/** === Score Command === **/

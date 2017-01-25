@@ -82,12 +82,8 @@ func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) (
 	return tgbotapi.Message{}, nil
 }
 
-
-
-// To Do Below This
-// ====================
-
-func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
+// ExecuteHypeCommand send that amazing most hypeful gif to the smawk chat
+func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
 	// Make sure that we have the hype command in our working directory
 	if _, err := os.Stat("hype.gif"); os.IsNotExist(err) {
 		// NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
@@ -101,13 +97,19 @@ func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) {
 		err := cmd.Run()
 		if err != nil {
 			fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+			return tgbotapi.Message{}, nil
 		}
 	}
 
 	doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
-	bot.API.Send(doc)
+	return bot.API.Send(doc)
 }
 
+
+
+
+// To Do Below This
+// ====================
 func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
 	// Connect to our database
 	db, err := ConnectDB()
