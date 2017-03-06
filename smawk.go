@@ -77,6 +77,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 				return bot.ExecuteSMAWKCommand(update, cmd)
 			case "/hype":
 				return bot.ExecuteHypeCommand(update)
+			case "/all":
+				return bot.ExecuteAllCommand(update)
 
 			case "/score":
 				bot.ExecuteScoreCommand(update, cmd)

@@ -17,7 +17,7 @@ Please use the following format when you update the changelog:
 		- `dapun`
 		- `splash` (since PokeGO died, the joke died also)
 		- `why`
-		- `hype` no longers can be used in the middle of a sentence
+		- `hype` no longer can be used in the middle of a sentence
 - Bug smashes
 	- `me` and `smawk` are now hard limited to users of SMÄWK
 - Test file covers more of the code, and tests deeper
@@ -27,6 +27,8 @@ Please use the following format when you update the changelog:
 - Actually uses tabs like we are supposed to
 - Code is now commented
 - Transfers repos to central location
+- New Commands (Say What!?)
+	- `all` (yes technically not new, but it's back)
 
 ###v1.1.2 - 2016-10-12
 - File refactor

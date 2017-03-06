@@ -105,6 +105,41 @@ func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) (tgbotapi.Messag
 	return bot.API.Send(doc)
 }
 
+// ExecuteAllCommand is responsible for notifying each of the users in the channel about a message.
+// It will fetch all the users from the database, and build a message string of their usernames
+func (bot *SmawkBot) ExecuteAllCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
+	// Connect to our database
+    db, err := ConnectDB()
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // Create our query
+    users, err := db.Query("SELECT username FROM users")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer users.Close()
+
+    // Get our scores
+    msg_string := ""
+
+    for users.Next() {
+            var username string
+            if err := users.Scan(&username); err != nil {
+                log.Fatal(err)
+            }
+        msg_string += " " + username
+    }
+    if err := users.Err(); err != nil {
+            log.Fatal(err)
+    }
+
+    msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+    return bot.API.Send(msg)
+}
+
 
 
 

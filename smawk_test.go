@@ -219,6 +219,19 @@ func TestBot(t *testing.T) {
 
 	fmt.Println("done")
 
+	/** === All Command === **/
+	fmt.Print(timestamp()+"Running /all tests.... ")
+
+	upd = GenerateUpdate("/all")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	allExpectedString := "@bnmtthews @cyberbatman @CMoneys @taborneighbor @wiglz @ReverendRecker @izaabsharp @PGB_Almighty @smawk_bot"
+	if msg.(tgbotapi.Message).Text != allExpectedString {
+		log.Fatalf("/all fail. Expected %s - got %s",allExpectedString,msg.(tgbotapi.Message).Text)
+	}
+
+	fmt.Println("done")
+
 
 
 
