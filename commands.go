@@ -354,3 +354,49 @@ func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) {
         bot.API.Send(msg)
     }
 }
+
+func (bot *SmawkBot) ExecuteAllCommand(update tgbotapi.Update) {
+	// Connect to our database
+    db, err := ConnectDB()
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // Create our query
+    users, err := db.Query("SELECT username FROM users")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer users.Close()
+
+    // Get our scores
+    msg_string := ""
+
+    for users.Next() {
+            var username string
+            if err := users.Scan(&username); err != nil {
+                log.Fatal(err)
+            }
+        msg_string += " " + username
+    }
+    if err := users.Err(); err != nil {
+            log.Fatal(err)
+    }
+
+    msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+    bot.API.Send(msg)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
