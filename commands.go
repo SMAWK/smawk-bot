@@ -409,7 +409,7 @@ func (bot *SmawkBot) ExecuteLabelCommand(update tgbotapi.Update, cmd []string) {
 	} else if len(cmd) >= 3 {
 		label := strings.Join(cmd[2:]," ")
 
-		votes, err := db.Query("UPDATE user SET label=? WHERE u.username=? ",label,cmd[1])
+		votes, err := db.Query("UPDATE user SET label=? WHERE username=? ",label,cmd[1])
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -437,7 +437,7 @@ func (bot *SmawkBot) ExecuteWhoisCommand(update tgbotapi.Update, cmd []string) {
 
 	} else if len(cmd) >= 2 {
 		var label sql.NullString
-		err = db.QueryRow("SELECT label FROM users WHERE u.username=?", cmd[1]).Scan(&label)
+		err = db.QueryRow("SELECT label FROM users WHERE username=?", cmd[1]).Scan(&label)
 		if err != nil {
 			log.Fatal(err)
 		} else if err == sql.ErrNoRows || !label.Valid {
