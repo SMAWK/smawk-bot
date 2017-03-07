@@ -421,6 +421,48 @@ func (bot *SmawkBot) ExecuteLabelCommand(update tgbotapi.Update, cmd []string) {
 	}
 }
 
+func (bot *SmawkBot) ExecuteLabelsCommand(update tgbotapi.Update) {
+	// Connect to our database
+	db, err := ConnectDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	// Create our query
+	labels, err := db.Query("SELECT u.username, u.label FROM users u")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer labels.Close()
+
+	// Get our scores
+	msg_string := ""
+
+	for labels.Next() {
+		var username string
+		var label sql.NullString
+		var labelString string
+
+		if err := labels.Scan(&username,&label); err != nil {
+			log.Fatal(err)
+		}
+
+		if !label.Valid {
+			labelString = "No Title"
+		} else {
+			labelString = label.String
+		}
+		msg_string += username[1:]+": "+labelString+"\n"
+	}
+	if err := labels.Err(); err != nil {
+			log.Fatal(err)
+	}
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+	bot.API.Send(msg)
+}
+
 func (bot *SmawkBot) ExecuteWhoisCommand(update tgbotapi.Update, cmd []string) {
 	// Connect to our database
 	db, err := ConnectDB()

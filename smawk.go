@@ -94,6 +94,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
             bot.ExecuteAllCommand(update)
         } else if (cmd[0] == "/label" || cmd[0] == "/label@smawk_bot") {
             bot.ExecuteLabelCommand(update, cmd)
+        } else if (cmd[0] == "/labels" || cmd[0] == "/labels@smawk_bot") {
+            bot.ExecuteLabelsCommand(update)
         } else if (cmd[0] == "/whois" || cmd[0] == "/whois@smawk_bot") {
             bot.ExecuteWhoisCommand(update, cmd)
         }

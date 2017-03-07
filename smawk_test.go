@@ -292,4 +292,46 @@ func TestUserScoreCommand(t *testing.T) {
     if err := users.Err(); err != nil {
             log.Fatal(err)
     }
+    fmt.Printf("\n=============\n")
+}
+
+func TestLabelsCommand(t *testing.T) {
+	db, err := connect()
+	if err != nil {
+      	log.Fatal(err)
+		t.FailNow()
+    }
+    defer db.Close()
+
+	// Create our query
+	labels, err := db.Query("SELECT u.username, u.label FROM users u")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer labels.Close()
+
+	// Get our scores
+	msg_string := ""
+
+	for labels.Next() {
+		var username string
+		var label sql.NullString
+		var labelString string
+
+		if err := labels.Scan(&username,&label); err != nil {
+			log.Fatal(err)
+		}
+
+		if !label.Valid {
+			labelString = "No Title"
+		} else {
+			labelString = label.String
+		}
+		msg_string += username[1:]+": "+labelString+"\n"
+	}
+	if err := labels.Err(); err != nil {
+			log.Fatal(err)
+	}
+
+	fmt.Print(msg_string)
 }
