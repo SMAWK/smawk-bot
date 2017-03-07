@@ -440,7 +440,7 @@ func (bot *SmawkBot) ExecuteWhoisCommand(update tgbotapi.Update, cmd []string) {
 		err = db.QueryRow("SELECT label FROM users WHERE u.username=?", cmd[1]).Scan(&label)
 		if err != nil {
 			log.Fatal(err)
-		} else if err == sql.ErrNoRows || !total_points.Valid {
+		} else if err == sql.ErrNoRows || !label.Valid {
 			msg_string := cmd[1]+" has not been labeled.\n"
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
 			bot.API.Send(msg)
