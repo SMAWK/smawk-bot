@@ -409,7 +409,7 @@ func (bot *SmawkBot) ExecuteLabelCommand(update tgbotapi.Update, cmd []string) {
 	} else if len(cmd) >= 3 {
 		label := strings.Join(cmd[2:]," ")
 
-		votes, err := db.Query("UPDATE user SET label=? WHERE username=? ",label,cmd[1])
+		votes, err := db.Query("UPDATE users SET label=? WHERE username=? ",label,cmd[1])
 		if err != nil {
 			log.Fatal(err)
 		}
