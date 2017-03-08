@@ -60,7 +60,7 @@ func (bot *SmawkBot) Listen(token string) <-chan tgbotapi.Update {
 }
 
 func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) {
-    if update.Message.Text != "" {
+    if update.Message != nil && update.Message.Text != "" {
         cmd := strings.Split(update.Message.Text, " ")
         if (cmd[0] == "/start" || cmd[0] == "/start@smawk_bot") {
             bot.ExecuteStartCommand(update)
