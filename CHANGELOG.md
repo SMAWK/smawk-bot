@@ -18,6 +18,7 @@ Please use the following format when you update the changelog:
 		- `splash` (since PokeGO died, the joke died also)
 		- `why`
 		- `hype` no longer can be used in the middle of a sentence
+		- `labels` was a little too redundant
 - Bug smashes
 	- `me` and `smawk` are now hard limited to users of SMÄWK
 - Test file covers more of the code, and tests deeper
@@ -29,6 +30,7 @@ Please use the following format when you update the changelog:
 - Transfers repos to central location
 - New Commands (Say What!?)
 	- `all` (yes technically not new, but it's back)
+	- `here` (which is literally just `all`)
 
 ###v1.1.2 - 2016-10-12
 - File refactor

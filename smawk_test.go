@@ -232,13 +232,27 @@ func TestBot(t *testing.T) {
 
 	fmt.Println("done")
 
-
-
-
 	/** === Hype Command === **/
 	fmt.Print(timestamp()+"Running /hype tests.... ")
 	upd = GenerateUpdate("/hype")
 	msg,err = bot.ParseAndExecuteUpdate(upd)
+	fmt.Println("done")
+
+	/** === Label Command === **/
+	fmt.Print(timestamp()+"Running /label tests.... ")
+	fmt.Println("done")
+
+	/** === Whois Command === **/
+	fmt.Print(timestamp()+"Running /whois tests.... ")
+	upd = GenerateUpdate("/whois")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Correct Usage: /whois @username" {
+		log.Fatalf("/whois string mismatch. Expected Correct Usage: /whois @username - got %s",strText)
+		t.FailNow();
+	}
+
 	fmt.Println("done")
 
 	/** === Score Command === **/

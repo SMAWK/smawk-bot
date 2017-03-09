@@ -109,35 +109,113 @@ func (bot *SmawkBot) ExecuteHypeCommand(update tgbotapi.Update) (tgbotapi.Messag
 // It will fetch all the users from the database, and build a message string of their usernames
 func (bot *SmawkBot) ExecuteAllCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
 	// Connect to our database
-    db, err := ConnectDB()
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer db.Close()
+	db, err := ConnectDB()
+	if err != nil {
+		log.Fatal(err)
+		return tgbotapi.Message{}, nil
+	}
+	defer db.Close()
 
-    // Create our query
-    users, err := db.Query("SELECT username FROM users")
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer users.Close()
+	// Create our query
+	users, err := db.Query("SELECT username FROM users")
+	if err != nil {
+		log.Fatal(err)
+		return tgbotapi.Message{}, nil
+	}
+	defer users.Close()
 
-    // Get our scores
-    msg_string := ""
+	// Get our scores
+	msg_string := ""
 
-    for users.Next() {
-            var username string
-            if err := users.Scan(&username); err != nil {
-                log.Fatal(err)
-            }
-        msg_string += " " + username
-    }
-    if err := users.Err(); err != nil {
-            log.Fatal(err)
-    }
+	for users.Next() {
+		var username string
+		if err := users.Scan(&username); err != nil {
+			log.Fatal(err)
+			return tgbotapi.Message{}, nil
+		}
+		msg_string += " " + username
+	}
+	if err := users.Err(); err != nil {
+		log.Fatal(err)
+		return tgbotapi.Message{}, nil
+	}
 
-    msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-    return bot.API.Send(msg)
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+	return bot.API.Send(msg)
+}
+
+// ExecuteLabelCommand assigns a label to the specified user, in the specified channel
+func (bot *SmawkBot) ExecuteLabelCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
+	// Connect to our database
+	db, err := ConnectDB()
+	if err != nil {
+		log.Fatal(err)
+		return tgbotapi.Message{}, nil
+	}
+	defer db.Close()
+
+	if len(cmd) == 1 || len(cmd) == 2 {
+		// Wrong Usage
+		msg_string := "Correct Usage: /label @username <name>"
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+
+	} else if cmd[1] == "@"+update.Message.From.UserName {
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "One must not label themself.")
+		return bot.API.Send(msg)
+
+	} else if len(cmd) >= 3 {
+		label := strings.Join(cmd[2:]," ")
+
+		votes, err := db.Query("UPDATE users SET label=? WHERE username=? ",label,cmd[1])
+		if err != nil {
+			log.Fatal(err)
+			return tgbotapi.Message{}, nil
+		}
+		defer votes.Close()
+
+		msg_string := cmd[1]+" is now "+label
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+	}
+
+	return tgbotapi.Message{}, nil
+}
+
+// ExecuteWhoisCommand is used to get the label for a specified user
+func (bot *SmawkBot) ExecuteWhoisCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
+	// Connect to our database
+	db, err := ConnectDB()
+	if err != nil {
+		log.Fatal(err)
+		return tgbotapi.Message{}, nil
+	}
+	defer db.Close()
+
+	if len(cmd) == 1 {
+		// Wrong Usage
+		msg_string := "Correct Usage: /whois @username"
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+
+	} else if len(cmd) >= 2 {
+		var label sql.NullString
+		err = db.QueryRow("SELECT label FROM users WHERE username=?", cmd[1]).Scan(&label)
+		if err != nil {
+			log.Fatal(err)
+			return tgbotapi.Message{}, nil
+		} else if err == sql.ErrNoRows || !label.Valid {
+			msg_string := cmd[1]+" has not been labeled.\n"
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+			return bot.API.Send(msg)
+		}
+
+		msg_string := cmd[1]+" is known as "+label.String
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+	}
+
+	return tgbotapi.Message{}, nil
 }
 
 
