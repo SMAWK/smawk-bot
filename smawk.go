@@ -51,6 +51,13 @@ func (bot *SmawkBot) OpenWebhookWithCert(url string, cert string) {
     }
 }
 
+func (bot *SmawkBot) OpenWebhook(url string) {
+    _, err := bot.API.SetWebhook(tgbotapi.NewWebhook(url))
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+
 // Listen opens a connection on the specified url and waits for a command
 // to come in. After it receives a command from the API, it returns the update
 // channel to the caller
