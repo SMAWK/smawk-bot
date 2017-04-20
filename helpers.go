@@ -72,10 +72,10 @@ func GenerateCertificate(c string, st string, ct string, org string, dom string,
 }
 
 // ConnectDB takes care of opening a proper connection to the database to retrieve the scores that we need
-func ConnectDB() (*sql.DB, error) {
+func ConnectDB(password string) (*sql.DB, error) {
     cfg := &mysql.Config {
         User: "smawk-bot",
-        Passwd: "SM@WKisGR8",
+        Passwd: password,
         Net: "tcp",
         Addr: "107.170.45.12:3306",
         DBName: "smawk-bot",

@@ -90,7 +90,7 @@ func (bot *SmawkBot) ExecuteDaPunCommand(update tgbotapi.Update) {
 
 func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
 	// Connect to our database
-	db, err := ConnectDB()
+	db, err := ConnectDB(bot.dbPass)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -159,7 +159,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) {
 
 func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) {
 	// Connect to our database
-	db, err := ConnectDB()
+	db, err := ConnectDB(bot.dbPass)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -214,7 +214,7 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
 
 func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string) {
 	// Connect to our database
-	db, err := ConnectDB()
+	db, err := ConnectDB(bot.dbPass)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -261,7 +261,7 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
 func (bot *SmawkBot) ExecuteBlessCommand(update tgbotapi.Update, cmd []string) {
 	if update.Message.From.UserName == "bnmtthews" || update.Message.From.UserName == "ReverendRecker" || update.Message.From.UserName == "CMoneys" {
 		// Connect to our database
-		db, err := ConnectDB()
+		db, err := ConnectDB(bot.dbPass)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -286,7 +286,7 @@ func (bot *SmawkBot) ExecuteBlessCommand(update tgbotapi.Update, cmd []string) {
 func (bot *SmawkBot) ExecuteCurseCommand(update tgbotapi.Update, cmd []string) {
 	if update.Message.From.UserName == "bnmtthews" || update.Message.From.UserName == "ReverendRecker" || update.Message.From.UserName == "CMoneys" {
 		// Connect to our database
-		db, err := ConnectDB()
+		db, err := ConnectDB(bot.dbPass)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -357,7 +357,7 @@ func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) {
 
 func (bot *SmawkBot) ExecuteAllCommand(update tgbotapi.Update) {
 	// Connect to our database
-	db, err := ConnectDB()
+	db, err := ConnectDB(bot.dbPass)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -390,7 +390,7 @@ func (bot *SmawkBot) ExecuteAllCommand(update tgbotapi.Update) {
 
 func (bot *SmawkBot) ExecuteLabelCommand(update tgbotapi.Update, cmd []string) {
 	// Connect to our database
-	db, err := ConnectDB()
+	db, err := ConnectDB(bot.dbPass)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -423,7 +423,7 @@ func (bot *SmawkBot) ExecuteLabelCommand(update tgbotapi.Update, cmd []string) {
 
 func (bot *SmawkBot) ExecuteLabelsCommand(update tgbotapi.Update) {
 	// Connect to our database
-	db, err := ConnectDB()
+	db, err := ConnectDB(bot.dbPass)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -465,7 +465,7 @@ func (bot *SmawkBot) ExecuteLabelsCommand(update tgbotapi.Update) {
 
 func (bot *SmawkBot) ExecuteWhoisCommand(update tgbotapi.Update, cmd []string) {
 	// Connect to our database
-	db, err := ConnectDB()
+	db, err := ConnectDB(bot.dbPass)
 	if err != nil {
 		log.Fatal(err)
 	}

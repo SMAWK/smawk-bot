@@ -9,12 +9,13 @@ import (
 // BotAPI allows you to interact with the Telegram Bot API.
 type SmawkBot struct {
     API *tgbotapi.BotAPI
+    dbPass string
 }
 
 // Connect takes a provided access token, and returns a pointer
 // to the Telegram Bot API. This function must be called in order
 // to have access to any of the commands
-func Connect(tkn string, debug bool) (*SmawkBot, error) {
+func Connect(tkn string, debug bool, dbPass string) (*SmawkBot, error) {
     // Call the Telegram API wrapper and authenticate our Bot
     bot, err := tgbotapi.NewBotAPI(tkn)
 
@@ -36,6 +37,7 @@ func Connect(tkn string, debug bool) (*SmawkBot, error) {
     // Create the SmawkBot
     sbot := &SmawkBot {
         API: bot,
+        dbPass: dbPass,
     }
 
     // Return our bot back to the caller
@@ -51,6 +53,7 @@ func (bot *SmawkBot) OpenWebhookWithCert(url string, cert string) {
     }
 }
 
+// OpenWebhook opens up a webhook without attaching a self signed certificate
 func (bot *SmawkBot) OpenWebhook(url string) {
     _, err := bot.API.SetWebhook(tgbotapi.NewWebhook(url))
     if err != nil {
