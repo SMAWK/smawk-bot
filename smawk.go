@@ -11,6 +11,7 @@ type SmawkBot struct {
 	API *tgbotapi.BotAPI
 	Debug bool
 	Testing bool
+	dbPass string
 	Version string
 }
 
@@ -58,6 +59,14 @@ func (bot *SmawkBot) OpenWebhookWithCert(url string, cert string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// OpenWebhook opens up a webhook without attaching a self signed certificate
+func (bot *SmawkBot) OpenWebhook(url string) {
+    _, err := bot.API.SetWebhook(tgbotapi.NewWebhook(url))
+    if err != nil {
+        log.Fatal(err)
+    }
 }
 
 // Listen opens a connection on the specified url and waits for a command
