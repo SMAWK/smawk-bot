@@ -22,7 +22,7 @@ const (
 // Connect takes a provided access token, and returns a pointer
 // to the Telegram Bot API. This function must be called in order
 // to have access to any of the commands
-func Connect(tkn string, debug bool) (*SmawkBot, error) {
+func Connect(tkn string, debug bool, dbPass string) (*SmawkBot, error) {
 	// Call the Telegram API wrapper and authenticate our Bot
 	bot, err := tgbotapi.NewBotAPI(tkn)
 
@@ -46,6 +46,7 @@ func Connect(tkn string, debug bool) (*SmawkBot, error) {
 		API: bot,
 		Debug: debug,
 		Version: botVersion,
+		dbPass: dbPass,
 	}
 
 	// Return our bot back to the caller
@@ -100,11 +101,11 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 				return bot.ExecuteWhoisCommand(update, cmd)
 			case "/version":
 				return bot.ExecuteVersionCommand(update)
-
-
-
 			case "/score":
-				bot.ExecuteScoreCommand(update, cmd)
+				return bot.ExecuteScoreCommand(update, cmd)
+
+
+
 			case "/upvote":
 				bot.ExecuteUpvoteCommand(update, cmd)
 			case "/downvote":

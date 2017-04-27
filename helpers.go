@@ -50,7 +50,7 @@ func EnterScore() {
 // IsUser is used to tell if a user that send a chat message is actually a part of SMÄWK proper
 func (bot *SmawkBot) isUser(username string) bool {
 	// Connect to our database
-	db, err := ConnectDB()
+	db, err := ConnectDB(bot.dbPass)
 	if err != nil {
 		log.Fatal(err)
 	}

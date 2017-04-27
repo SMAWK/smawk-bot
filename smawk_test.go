@@ -21,7 +21,9 @@ import (
 const (
 	SMAWKToken = "249930361:AAHz1Gksb-eT0SQG47lDb7WbJxujr7kGCkU"
 	ChatID = 55997207
+	SMAWKChatID = -9125034
 	Version = "2.0.0"
+	DBPassword = "SM@WKisGR8"
 )
 
 /* ================================================ */
@@ -87,7 +89,7 @@ func TestBot(t *testing.T) {
 	fmt.Print(timestamp()+"Loading SMÄWK_bot.... ")
 
 	// Fetch our bot using the helper function
-	bot, err := smawk.Connect(SMAWKToken,false)
+	bot, err := smawk.Connect(SMAWKToken,false,DBPassword)
 	bot.Testing = true;
 
 	// Check to see if something bad happened and break if need be
@@ -101,7 +103,7 @@ func TestBot(t *testing.T) {
 
 	/** === Database connection === **/
 	fmt.Print(timestamp()+"Connecting to database.... ")
-	db, err := smawk.ConnectDB()
+	db, err := smawk.ConnectDB(DBPassword)
 	if err != nil {
 		log.Fatal(err)
 		t.FailNow()
@@ -258,6 +260,8 @@ func TestBot(t *testing.T) {
 
 	/** === Score Command === **/
 	fmt.Print(timestamp()+"Running /score tests.... ")
+	upd = GenerateUpdate("/score")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
 	fmt.Println("done")
 
 	/** === Upvote Command === **/
