@@ -218,6 +218,15 @@ func (bot *SmawkBot) ExecuteWhoisCommand(update tgbotapi.Update, cmd []string) (
 	return tgbotapi.Message{}, nil
 }
 
+// ExecuteVersionCommand returns the current version of the bot back to the chat that called it
+func (bot *SmawkBot) ExecuteVersionCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
+	// Create our message and send it to the chat that started the bot.
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Current Bot Version: " + bot.Version)
+
+	// Send the message
+	return bot.API.Send(msg)
+}
+
 
 
 

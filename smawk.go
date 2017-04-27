@@ -11,7 +11,12 @@ type SmawkBot struct {
 	API *tgbotapi.BotAPI
 	Debug bool
 	Testing bool
+	Version string
 }
+
+const (
+	botVersion = "2.0.0"
+)
 
 // Connect takes a provided access token, and returns a pointer
 // to the Telegram Bot API. This function must be called in order
@@ -39,6 +44,7 @@ func Connect(tkn string, debug bool) (*SmawkBot, error) {
 	sbot := &SmawkBot {
 		API: bot,
 		Debug: debug,
+		Version: botVersion,
 	}
 
 	// Return our bot back to the caller
@@ -83,6 +89,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 				return bot.ExecuteLabelCommand(update, cmd)
 			case "/whois":
 				return bot.ExecuteWhoisCommand(update, cmd)
+			case "/version":
+				return bot.ExecuteVersionCommand(update)
 
 
 

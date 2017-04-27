@@ -19,8 +19,9 @@ import (
 
 // Create our constants for use throughout the testing functions
 const (
-	SMAWKToken              = "249930361:AAHz1Gksb-eT0SQG47lDb7WbJxujr7kGCkU"
-	ChatID                 	= 55997207
+	SMAWKToken = "249930361:AAHz1Gksb-eT0SQG47lDb7WbJxujr7kGCkU"
+	ChatID = 55997207
+	Version = "2.0.0"
 )
 
 /* ================================================ */
@@ -273,6 +274,18 @@ func TestBot(t *testing.T) {
 
 	/** === Curse Command === **/
 	fmt.Print(timestamp()+"Running /curse tests.... ")
+	fmt.Println("done")
+
+	/** === Version Command === **/
+	fmt.Print(timestamp()+"Running /version tests.... ")
+	upd = GenerateUpdate("/version")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Current Bot Version: " + Version {
+		log.Fatalf("/version string mismatch. Expected Current Bot Version: %s. Got %s",Version,strText)
+		t.FailNow();
+	}
 	fmt.Println("done")
 
 	fmt.Println("======= Command Tests Succeeded =======")

@@ -7,9 +7,7 @@
 - Add Reminder Feature
 - Add Lootbox Feature
 - Add Birthday Reminder
-- Programmers Prayer
 - Add a flag so specific users aren't targeted by /all
-- Set up bot to use LetsEncrypt
 - `mute` and `unmute`
-- Pull db info from command line
 - Register and Deregister
+- upvote downvote handle better

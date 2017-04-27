@@ -28,9 +28,11 @@ Please use the following format when you update the changelog:
 - Actually uses tabs like we are supposed to
 - Code is now commented
 - Transfers repos to central location
+- Removes DB password from codebase, and requires it to be entered on the command line
 - New Commands (Say What!?)
 	- `all` (yes technically not new, but it's back)
 	- `here` (which is literally just `all`)
+	- `version` (so we can see what we are running)
 
 ###v1.1.2 - 2016-10-12
 - File refactor
