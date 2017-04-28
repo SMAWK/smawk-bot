@@ -97,7 +97,6 @@ func TestBot(t *testing.T) {
 		log.Fatal(err)
 		t.FailNow()
 	}
-
 	// Otherwise, log to the console that we authenticated properly
 	fmt.Println("done")
 
@@ -115,7 +114,6 @@ func TestBot(t *testing.T) {
 		log.Fatal(err)
 		t.FailNow()
 	}
-
 	fmt.Println("done")
 	fmt.Println("======= Helper Tests Succeeded =======\n")
 
@@ -133,7 +131,6 @@ func TestBot(t *testing.T) {
 		log.Fatal(err)
 		t.FailNow();
 	}
-
 	fmt.Println("done")
 
 	/** === ID Command === **/
@@ -151,7 +148,6 @@ func TestBot(t *testing.T) {
 		log.Fatal("id mismatch")
 		t.FailNow();
 	}
-
 	fmt.Println("done")
 
 	/** === SMAWK Command === **/
@@ -185,7 +181,6 @@ func TestBot(t *testing.T) {
 		log.Fatalf("/smawk string mismatch. Expected wheeee - got %s",strText)
 		t.FailNow();
 	}
-
 	fmt.Println("done")
 
 	/** === Me Command === **/
@@ -219,7 +214,6 @@ func TestBot(t *testing.T) {
 		log.Fatalf("/me string mismatch. Expected wheeee - got %s",strText)
 		t.FailNow();
 	}
-
 	fmt.Println("done")
 
 	/** === All Command === **/
@@ -232,7 +226,6 @@ func TestBot(t *testing.T) {
 	if msg.(tgbotapi.Message).Text != allExpectedString {
 		log.Fatalf("/all fail. Expected %s - got %s",allExpectedString,msg.(tgbotapi.Message).Text)
 	}
-
 	fmt.Println("done")
 
 	/** === Hype Command === **/
@@ -255,7 +248,6 @@ func TestBot(t *testing.T) {
 		log.Fatalf("/whois string mismatch. Expected Correct Usage: /whois @username - got %s",strText)
 		t.FailNow();
 	}
-
 	fmt.Println("done")
 
 	/** === Score Command === **/
@@ -277,7 +269,6 @@ func TestBot(t *testing.T) {
 		log.Fatalf("/whois string mismatch. Expected \"@bnmtthews has 1 points, of which:\n1 is for Test\" - got %s",strText)
 		t.FailNow();
 	}
-
 	fmt.Println("done")
 
 	/** === Upvote Command === **/
@@ -308,7 +299,6 @@ func TestBot(t *testing.T) {
 		log.Fatalf("/whois string mismatch. Expected \"@foo has been upvoted 1 point for bar\" - got %s",strText)
 		t.FailNow();
 	}
-
 	fmt.Println("done")
 
 	/** === Downvote Command === **/
@@ -339,15 +329,30 @@ func TestBot(t *testing.T) {
 		log.Fatalf("/whois string mismatch. Expected \"@foo has been downvoted 1 point for bar\" - got %s",strText)
 		t.FailNow();
 	}
-
 	fmt.Println("done")
 
 	/** === Bless Command === **/
 	fmt.Print(timestamp()+"Running /bless tests.... ")
+	upd = GenerateUpdate("/bless")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "No blessing. All are equal in SMÄWK's eyes." {
+		log.Fatalf("/whois string mismatch. Expected \"No blessing. All are equal in SMÄWK's eyes.\" - got %s",strText)
+		t.FailNow();
+	}
 	fmt.Println("done")
 
 	/** === Curse Command === **/
 	fmt.Print(timestamp()+"Running /curse tests.... ")
+	upd = GenerateUpdate("/curse")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "No cursing. SMÄWK does not condone cursing." {
+		log.Fatalf("/whois string mismatch. Expected \"No cursing. SMÄWK does not condone cursing.\" - got %s",strText)
+		t.FailNow();
+	}
 	fmt.Println("done")
 
 	/** === Version Command === **/

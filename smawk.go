@@ -87,7 +87,10 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 		switch cmd := strings.Split(update.Message.Text, " "); strings.Replace(cmd[0],"@smawk_bot","",-1) {
 			case "/all", "/here":
 				return bot.ExecuteAllCommand(update)
-
+			case "/bless":
+				return bot.ExecuteBlessCommand(update, cmd)
+			case "/curse":
+				return bot.ExecuteCurseCommand(update, cmd)
 			case "/downvote":
 				return bot.ExecuteDownvoteCommand(update, cmd)
 			case "/hype":
@@ -108,16 +111,6 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 				return bot.ExecuteVersionCommand(update)
 			case "/whois":
 				return bot.ExecuteWhoisCommand(update, cmd)
-
-
-
-
-
-
-			case "/bless":
-				bot.ExecuteBlessCommand(update, cmd)
-			case "/curse":
-				bot.ExecuteCurseCommand(update, cmd)
 		}
 	}
 

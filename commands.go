@@ -406,61 +406,54 @@ func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string
 	return tgbotapi.Message{}, nil
 }
 
+// ExecuteBlessCommand blesses a user for 3 points
+func (bot *SmawkBot) ExecuteBlessCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
+	// if update.Message.From.UserName == "bnmtthews" || update.Message.From.UserName == "ReverendRecker" || update.Message.From.UserName == "CMoneys" {
+	// 	err := bot.EnterScore(update.Message.Chat.ID, cmd[1], "Blessings from Dude", "3")
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 		return tgbotapi.Message{}, nil
+	// 	}
 
+	// 	msg_string := cmd[1]+" has been blessed for 3 points"
+	// 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+	// 	return bot.API.Send(msg)
 
+	// } else {
+	// 	msg_string := "The power of blessing has not been bestowed upon you"
+	// 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+	// 	return bot.API.Send(msg)
+	// }
 
-// To Do Below This
-// ====================
+	// return tgbotapi.Message{}, nil
 
-
-
-
-func (bot *SmawkBot) ExecuteBlessCommand(update tgbotapi.Update, cmd []string) {
-	if update.Message.From.UserName == "bnmtthews" || update.Message.From.UserName == "ReverendRecker" || update.Message.From.UserName == "CMoneys" {
-		// Connect to our database
-		db, err := ConnectDB(bot.dbPass)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer db.Close()
-
-		votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,3,?,'Blessings from Dude' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
-		if err != nil {
-				log.Fatal(err)
-		}
-		defer votes.Close()
-
-		msg_string := cmd[1]+" has been blessed for 3 points"
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-		bot.API.Send(msg)
-	} else {
-		msg_string := "The power of blessing has not been bestowed upon you"
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-		bot.API.Send(msg)
-	}
+	msg_string := "No blessing. All are equal in SMÄWK's eyes."
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+	return bot.API.Send(msg)
 }
 
-func (bot *SmawkBot) ExecuteCurseCommand(update tgbotapi.Update, cmd []string) {
-	if update.Message.From.UserName == "bnmtthews" || update.Message.From.UserName == "ReverendRecker" || update.Message.From.UserName == "CMoneys" {
-		// Connect to our database
-		db, err := ConnectDB(bot.dbPass)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer db.Close()
+// ExecuteCurseCommand curses a user for 3 points
+func (bot *SmawkBot) ExecuteCurseCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
+	// if update.Message.From.UserName == "bnmtthews" || update.Message.From.UserName == "ReverendRecker" || update.Message.From.UserName == "CMoneys" {
+	// 	err := bot.EnterScore(update.Message.Chat.ID, cmd[1], "Curses from Dude", "-3")
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 		return tgbotapi.Message{}, nil
+	// 	}
 
-		votes, err := db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,-3,?,'Curses from Dude' FROM users u WHERE u.username=?",update.Message.Chat.ID,cmd[1])
-		if err != nil {
-				log.Fatal(err)
-		}
-		defer votes.Close()
+	// 	msg_string := cmd[1]+" has been cursed for 3 points"
+	// 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+	// 	return bot.API.Send(msg)
 
-		msg_string := cmd[1]+" has been cursed for 3 points"
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-		bot.API.Send(msg)
-	} else {
-		msg_string := "The power of cursing has not been bestowed upon you"
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-		bot.API.Send(msg)
-	}
+	// } else {
+	// 	msg_string := "The power of blessing has not been bestowed upon you"
+	// 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+	// 	return bot.API.Send(msg)
+	// }
+
+	// return tgbotapi.Message{}, nil
+
+	msg_string := "No cursing. SMÄWK does not condone cursing."
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+	return bot.API.Send(msg)
 }

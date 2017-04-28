@@ -29,6 +29,7 @@ Please use the following format when you update the changelog:
 - Code is now commented
 - Transfers repos to central location
 - Removes DB password from codebase, and requires it to be entered on the command line
+- `/bless` and `/curse` have been removed. We are all equal in SMÄWK's sight
 - New Commands (Say What!?)
 	- `all` (yes technically not new, but it's back)
 	- `here` (which is literally just `all`)
