@@ -217,7 +217,7 @@ func TestBot(t *testing.T) {
 	upd = GenerateUpdate("/all")
 	msg,err = bot.ParseAndExecuteUpdate(upd)
 
-	allExpectedString := "@testUser"
+	allExpectedString := "@bnmtthews @testUser"
 	if msg.(tgbotapi.Message).Text != allExpectedString {
 		log.Fatalf("/all fail. Expected %s - got %s",allExpectedString,msg.(tgbotapi.Message).Text)
 	}
@@ -251,8 +251,8 @@ func TestBot(t *testing.T) {
 	msg,err = bot.ParseAndExecuteUpdate(upd)
 
 	strText = msg.(tgbotapi.Message).Text
-	if strText != "bnmtthews: 1" {
-		log.Fatalf("/whois string mismatch. Expected \"bnmtthews: 1\" - got %s",strText)
+	if strText != "bnmtthews: 1\ntestUser: 0" {
+		log.Fatalf("/whois string mismatch. Expected \"bnmtthews: 1\ntestUser: 0\" - got %s",strText)
 		t.FailNow();
 	}
 
@@ -372,10 +372,44 @@ func TestBot(t *testing.T) {
 
 	/** === Mute Command === **/
 	fmt.Print(timestamp()+"Running /mute tests.... ")
+	upd = GenerateUpdate("/mute fail")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "Correct Usage: /mute" {
+		log.Fatalf("/mute fail. Expected \"Correct Usage: /mute\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+
+	upd = GenerateUpdate("/mute")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "@bnmtthews has been muted." {
+		log.Fatalf("/mute fail. Expected \"@bnmtthews has been muted.\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+
+	upd = GenerateUpdate("/all")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "@testUser" {
+		log.Fatalf("/mute fail. Expected \"@testUser\" - got %s",msg.(tgbotapi.Message).Text)
+	}
 	fmt.Println("done")
 
 	/** === Unmute Command === **/
 	fmt.Print(timestamp()+"Running /unmute tests.... ")
+	upd = GenerateUpdate("/unmute fail")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "Correct Usage: /unmute" {
+		log.Fatalf("/mute fail. Expected \"Correct Usage: /unmute\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+
+	upd = GenerateUpdate("/unmute")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "@bnmtthews has been unmuted." {
+		log.Fatalf("/mute fail. Expected \"@bnmtthews has been unmuted.\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+
+	upd = GenerateUpdate("/all")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "@bnmtthews @testUser" {
+		log.Fatalf("/unmute fail. Expected \"@bnmtthews @testUser\" - got %s",msg.(tgbotapi.Message).Text)
+	}
 	fmt.Println("done")
 
 	fmt.Println("======= Command Tests Succeeded =======")

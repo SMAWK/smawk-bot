@@ -18,7 +18,7 @@ func (bot *SmawkBot) ExecuteAllCommand(update tgbotapi.Update) (tgbotapi.Message
 	defer db.Close()
 
 	// Create our query
-	users, err := db.Query("SELECT username FROM users WHERE chat_id=? AND (flag_muted IS NULL OR flag_muted = '0')",update.Message.Chat.ID)
+	users, err := db.Query("SELECT username FROM users WHERE chat_id=? AND (flag_muted IS NULL OR flag_muted = '0') ORDER BY `username` ASC",update.Message.Chat.ID)
 	if err != nil {
 		log.Fatal(err)
 		return tgbotapi.Message{}, nil
@@ -83,7 +83,7 @@ func (bot *SmawkBot) ExecuteUnmuteCommand(update tgbotapi.Update, cmd []string) 
 	defer db.Close()
 
 	if len(cmd) > 1 {
-		msg_string := "Correct Usage: /mute"
+		msg_string := "Correct Usage: /unmute"
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
 		return bot.API.Send(msg)
 	} else {
@@ -93,7 +93,7 @@ func (bot *SmawkBot) ExecuteUnmuteCommand(update tgbotapi.Update, cmd []string) 
 			return tgbotapi.Message{}, nil
 		}
 
-		msg_string := "@"+update.Message.From.UserName+" has been muted."
+		msg_string := "@"+update.Message.From.UserName+" has been unmuted."
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
 		return bot.API.Send(msg)
 	}

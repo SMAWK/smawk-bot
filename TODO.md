@@ -2,7 +2,6 @@
 
 - Allow bot usage in separate channels
 	- User Registration
-	- Chat Specific Commands
 	- Birthday Register
 - Add Reminder Feature
 - Add Lootbox Feature

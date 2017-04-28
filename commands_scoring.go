@@ -22,6 +22,51 @@ func (bot *SmawkBot) ExecuteCurseCommand(update tgbotapi.Update, cmd []string) (
 	return bot.API.Send(msg)
 }
 
+// ExecuteDownvoteCommand docs points from a user
+func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
+
+	if len(cmd) == 1 {
+		// Wrong Usage
+		msg_string := "Correct Usage: /downvote @username [reason]"
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+
+	} else if len(cmd) == 2 {
+		// Downvote User
+		err := bot.EnterScore(update.Message.Chat.ID, cmd[1], "no reason", "-1")
+		if err != nil {
+			log.Fatal(err)
+			return tgbotapi.Message{}, nil
+		}
+
+		msg_string := cmd[1]+" has been downvoted 1 point"
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+
+	} else if len(cmd) >= 3 {
+		// Create our reason
+		var reason string
+		if cmd[2] == "for" && len(cmd) > 3 {
+			reason = strings.Join(cmd[3:]," ")
+		} else {
+			reason = strings.Join(cmd[2:]," ")
+		}
+
+		// Downvote User Reason
+		err := bot.EnterScore(update.Message.Chat.ID, cmd[1], reason, "-1")
+		if err != nil {
+			log.Fatal(err)
+			return tgbotapi.Message{}, nil
+		}
+
+		msg_string := cmd[1]+" has been downvoted 1 point for "+reason
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+	}
+
+	return tgbotapi.Message{}, nil
+}
+
 // ExecuteScoreCommand returns the current point count for each user in the chat
 func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
 	// Connect to our database
@@ -34,7 +79,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) (
 
 	if len(cmd) == 1 {
 		// Create our query
-		users, err := db.Query("SELECT u.username, SUM(s.point) as `points` FROM scores s JOIN users u on u.id = s.user_id WHERE s.chat_id = "+strconv.FormatInt(update.Message.Chat.ID,10)+" GROUP BY s.user_id ORDER BY `points` DESC")
+		users, err := db.Query("SELECT u.username, CASE WHEN SUM(s.point) IS NOT NULL THEN SUM(s.point) ELSE 0 END AS `points` FROM users u LEFT JOIN scores s ON s.user_id = u.id WHERE u.chat_id=? GROUP BY u.id ORDER BY `points` DESC",update.Message.Chat.ID)
 		if err != nil {
 			log.Fatal(err)
 			return tgbotapi.Message{}, nil
@@ -149,51 +194,6 @@ func (bot *SmawkBot) ExecuteUpvoteCommand(update tgbotapi.Update, cmd []string) 
 		}
 
 		msg_string := cmd[1]+" has been upvoted 1 point for "+reason
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-		return bot.API.Send(msg)
-	}
-
-	return tgbotapi.Message{}, nil
-}
-
-// ExecuteDownvoteCommand docs points from a user
-func (bot *SmawkBot) ExecuteDownvoteCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
-
-	if len(cmd) == 1 {
-		// Wrong Usage
-		msg_string := "Correct Usage: /downvote @username [reason]"
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-		return bot.API.Send(msg)
-
-	} else if len(cmd) == 2 {
-		// Downvote User
-		err := bot.EnterScore(update.Message.Chat.ID, cmd[1], "no reason", "-1")
-		if err != nil {
-			log.Fatal(err)
-			return tgbotapi.Message{}, nil
-		}
-
-		msg_string := cmd[1]+" has been downvoted 1 point"
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
-		return bot.API.Send(msg)
-
-	} else if len(cmd) >= 3 {
-		// Create our reason
-		var reason string
-		if cmd[2] == "for" && len(cmd) > 3 {
-			reason = strings.Join(cmd[3:]," ")
-		} else {
-			reason = strings.Join(cmd[2:]," ")
-		}
-
-		// Downvote User Reason
-		err := bot.EnterScore(update.Message.Chat.ID, cmd[1], reason, "-1")
-		if err != nil {
-			log.Fatal(err)
-			return tgbotapi.Message{}, nil
-		}
-
-		msg_string := cmd[1]+" has been downvoted 1 point for "+reason
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
 		return bot.API.Send(msg)
 	}
