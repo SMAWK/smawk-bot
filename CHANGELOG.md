@@ -37,6 +37,7 @@ Please use the following format when you update the changelog:
 	- `deregister` - Deregisters a user from using the chat calls
 	- `here` - (literally just `all`)
 	- `mute` - Will mute your username from `here`
+	- `register` - Register your username on a different chat land
 	- `unmute` - Will unmute your username from `here`
 	- `version` - (so we can see what we are running)
 

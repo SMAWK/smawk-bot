@@ -116,7 +116,7 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 			case "/unmute":
 				return bot.ExecuteUnmuteCommand(update, cmd)
 
-			/* ====== Registratoin ====== */
+			/* ====== Registration ====== */
 
 			/* ====== Scoring ====== */
 			case "/bless":

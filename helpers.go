@@ -48,7 +48,7 @@ func (bot *SmawkBot) EnterScore(chat_id int64, username string, reason string, a
 	}
 	defer db.Close()
 
-	_, err = db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,?,?,? FROM users u WHERE u.username=?",amount,chat_id,reason,username)
+	_, err = db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,?,?,? FROM users u WHERE u.username=? AND u.chat_id=?",amount,chat_id,reason,username,chat_id)
 
 	return err
 }

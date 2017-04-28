@@ -229,10 +229,6 @@ func TestBot(t *testing.T) {
 	msg,err = bot.ParseAndExecuteUpdate(upd)
 	fmt.Println("done")
 
-	/** === Label Command === **/
-	fmt.Print(timestamp()+"Running /label tests.... ")
-	fmt.Println("done")
-
 	/** === Whois Command === **/
 	fmt.Print(timestamp()+"Running /whois tests.... ")
 	upd = GenerateUpdate("/whois")
@@ -243,13 +239,63 @@ func TestBot(t *testing.T) {
 		log.Fatalf("/whois string mismatch. Expected Correct Usage: /whois @username - got %s",strText)
 		t.FailNow();
 	}
+
+	upd = GenerateUpdate("/whois @testUser")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@testUser is known as This Is A Test User" {
+		log.Fatalf("/whois string mismatch. Expected \"@testUser is known as This Is A Test User\" - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Label Command === **/
+	fmt.Print(timestamp()+"Running /label tests.... ")
+	upd = GenerateUpdate("/label")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Correct Usage: /label @username <name>" {
+		log.Fatalf("/whois string mismatch. Expected \"Correct Usage: /label @username <name>\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/label @bnmtthews test")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "One must not label themself." {
+		log.Fatalf("/whois string mismatch. Expected \"One must not label themself.\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/label @testUser foo")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@testUser is now foo" {
+		log.Fatalf("/whois string mismatch. Expected \"@testUser is now foo\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/whois @testUser")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@testUser is known as foo" {
+		log.Fatalf("/whois string mismatch. Expected \"@testUser is known as foo\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/label @testUser This Is A Test User")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@testUser is now This Is A Test User" {
+		log.Fatalf("/whois string mismatch. Expected \"@testUser is now This Is A Test User\" - got %s",strText)
+		t.FailNow();
+	}
 	fmt.Println("done")
 
 	/** === Score Command === **/
 	fmt.Print(timestamp()+"Running /score tests.... ")
 	upd = GenerateUpdate("/score")
 	msg,err = bot.ParseAndExecuteUpdate(upd)
-
 	strText = msg.(tgbotapi.Message).Text
 	if strText != "bnmtthews: 1\ntestUser: 0" {
 		log.Fatalf("/whois string mismatch. Expected \"bnmtthews: 1\ntestUser: 0\" - got %s",strText)
@@ -258,7 +304,6 @@ func TestBot(t *testing.T) {
 
 	upd = GenerateUpdate("/score @bnmtthews")
 	msg,err = bot.ParseAndExecuteUpdate(upd)
-
 	strText = msg.(tgbotapi.Message).Text
 	if strText != "@bnmtthews has 1 points, of which:\n1 is for Test" {
 		log.Fatalf("/whois string mismatch. Expected \"@bnmtthews has 1 points, of which:\n1 is for Test\" - got %s",strText)
