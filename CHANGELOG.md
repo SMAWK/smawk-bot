@@ -1,4 +1,4 @@
-#Formatting
+# Formatting
 Please use the following format when you update the changelog:
 ```
 ###<version> - <release date (yyyy-mm-dd)>
@@ -7,8 +7,8 @@ Please use the following format when you update the changelog:
 - ...
 ```
 
-#Changelog
-###v2.0.0-beta
+# Changelog
+### v2.0.0-beta
 - VERSION 2.0.0!!!! (a.k.a. let's do this again)
 - Refactors Library Codebase
 	- ParseAndExecuteUpdates() now uses a more idiomatic `switch` vs `if / else`
@@ -42,26 +42,26 @@ Please use the following format when you update the changelog:
 	- `unmute` - Will unmute your username from `here`
 	- `version` - (so we can see what we are running)
 
-###v1.1.2 - 2016-10-12
+### v1.1.2 - 2016-10-12
 - File refactor
 
-###v1.1.1 - 2016-10-07
+### v1.1.1 - 2016-10-07
 - Fixes scoring between chats
 - Adds a lovely 3rd person view
 
-###v1.1.0 - 2016-08-08
+### v1.1.0 - 2016-08-08
 - Adds Scoring
 - Adds Upvoting
 - Adds Downvoting
 
-###v1.0.2 - 2016-08-05
+### v1.0.2 - 2016-08-05
 - Lets /hype be called anywhere in a string
 	- Adds appropriate tests
 
-###v1.0.1 - 2016-08-01
+### v1.0.1 - 2016-08-01
 - Adds new 'Whatchu Did There' gif
 
-###v1.0.0 - 2016-07-27
+### v1.0.0 - 2016-07-27
 - Converts from standalone program to library
 - Adds self-signed certificate handler
 - Updates README to reflect changes
