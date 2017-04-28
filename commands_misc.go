@@ -6,15 +6,6 @@ import (
 	"strings"
 )
 
-// ExecuteStartCommand is launched when the bot is started, and sends a message to the chat that started it
-func (bot *SmawkBot) ExecuteStartCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
-	// Create our message and send it to the chat that started the bot.
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Lo, the official SMÄWKBot rises!")
-
-	// Send the message
-	return bot.API.Send(msg)
-}
-
 // ExecuteIDCommand returns the ID of a chat to the person that called this command.
 // This command is only available on a private chat
 func (bot *SmawkBot) ExecuteIDCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
@@ -35,7 +26,7 @@ func (bot *SmawkBot) ExecuteIDCommand(update tgbotapi.Update) (tgbotapi.Message,
 func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
 	// Check to see if the user that called this command is actually a member of SMAWK
 	// If so, go ahead and send the message
-	if bot.isUser(update.Message.From.UserName) {
+	if bot.isSmawkUser(update.Message.From.UserName) {
 		// Look to see if the command was executed successfully
 		switch len(cmd) {
 			// Wrong Usage
@@ -74,6 +65,15 @@ func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) (
 	}
 
 	return tgbotapi.Message{}, nil
+}
+
+// ExecuteStartCommand is launched when the bot is started, and sends a message to the chat that started it
+func (bot *SmawkBot) ExecuteStartCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
+	// Create our message and send it to the chat that started the bot.
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Lo, the official SMÄWKBot rises!")
+
+	// Send the message
+	return bot.API.Send(msg)
 }
 
 // ExecuteVersionCommand returns the current version of the bot back to the chat that called it

@@ -18,7 +18,7 @@ func (bot *SmawkBot) ExecuteAllCommand(update tgbotapi.Update) (tgbotapi.Message
 	defer db.Close()
 
 	// Create our query
-	users, err := db.Query("SELECT username FROM users")
+	users, err := db.Query("SELECT username FROM users WHERE chat_id=? AND (flag_muted IS NULL OR flag_muted = '0')",update.Message.Chat.ID)
 	if err != nil {
 		log.Fatal(err)
 		return tgbotapi.Message{}, nil
@@ -43,4 +43,60 @@ func (bot *SmawkBot) ExecuteAllCommand(update tgbotapi.Update) (tgbotapi.Message
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
 	return bot.API.Send(msg)
+}
+
+// ExecuteMuteCommand will mute the current user, so they are not targeted by the /all command
+func (bot *SmawkBot) ExecuteMuteCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
+	db, err := ConnectDB(bot.dbPass)
+	if err != nil {
+		log.Fatal(err)
+		return tgbotapi.Message{}, nil
+	}
+	defer db.Close()
+
+	if len(cmd) > 1 {
+		msg_string := "Correct Usage: /mute"
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+	} else {
+		_, err := db.Query("UPDATE users SET flag_muted=1 WHERE chat_id=? AND username=? ",update.Message.Chat.ID,"@"+update.Message.From.UserName)
+		if err != nil {
+			log.Fatal(err)
+			return tgbotapi.Message{}, nil
+		}
+
+		msg_string := "@"+update.Message.From.UserName+" has been muted."
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+	}
+
+	return tgbotapi.Message{}, nil
+}
+
+// ExecuteUnmuteCommand will unmute the current user, so they are notified by the /all command
+func (bot *SmawkBot) ExecuteUnmuteCommand(update tgbotapi.Update, cmd []string) (tgbotapi.Message, error) {
+	db, err := ConnectDB(bot.dbPass)
+	if err != nil {
+		log.Fatal(err)
+		return tgbotapi.Message{}, nil
+	}
+	defer db.Close()
+
+	if len(cmd) > 1 {
+		msg_string := "Correct Usage: /mute"
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+	} else {
+		_, err := db.Query("UPDATE users SET flag_muted=0 WHERE chat_id=? AND username=? ",update.Message.Chat.ID,"@"+update.Message.From.UserName)
+		if err != nil {
+			log.Fatal(err)
+			return tgbotapi.Message{}, nil
+		}
+
+		msg_string := "@"+update.Message.From.UserName+" has been muted."
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, msg_string)
+		return bot.API.Send(msg)
+	}
+
+	return tgbotapi.Message{}, nil
 }

@@ -31,10 +31,14 @@ Please use the following format when you update the changelog:
 - Removes DB password from codebase, and requires it to be entered on the command line
 - Commands are now split into several files to help find each other
 - `/bless` and `/curse` have been removed. We are all equal in SMÄWK's sight
+- The bot can now be deployed in any group chat, and should work fine
 - New Commands (Say What!?)
-	- `all` (yes technically not new, but it's back)
-	- `here` (which is literally just `all`)
-	- `version` (so we can see what we are running)
+	- `all` - (yes technically not new, but it's back)
+	- `deregister` - Deregisters a user from using the chat calls
+	- `here` - (literally just `all`)
+	- `mute` - Will mute your username from `here`
+	- `unmute` - Will unmute your username from `here`
+	- `version` - (so we can see what we are running)
 
 ###v1.1.2 - 2016-10-12
 - File refactor

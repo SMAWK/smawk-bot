@@ -217,7 +217,7 @@ func TestBot(t *testing.T) {
 	upd = GenerateUpdate("/all")
 	msg,err = bot.ParseAndExecuteUpdate(upd)
 
-	allExpectedString := "@bnmtthews @cyberbatman @CMoneys @taborneighbor @wiglz @ReverendRecker @izaabsharp @PGB_Almighty @smawk_bot"
+	allExpectedString := "@testUser"
 	if msg.(tgbotapi.Message).Text != allExpectedString {
 		log.Fatalf("/all fail. Expected %s - got %s",allExpectedString,msg.(tgbotapi.Message).Text)
 	}
@@ -360,6 +360,22 @@ func TestBot(t *testing.T) {
 		log.Fatalf("/version string mismatch. Expected Current Bot Version: %s. Got %s",Version,strText)
 		t.FailNow();
 	}
+	fmt.Println("done")
+
+	/** === Register Command === **/
+	fmt.Print(timestamp()+"Running /register tests.... ")
+	fmt.Println("done")
+
+	/** === Deregister Command === **/
+	fmt.Print(timestamp()+"Running /deregister tests.... ")
+	fmt.Println("done")
+
+	/** === Mute Command === **/
+	fmt.Print(timestamp()+"Running /mute tests.... ")
+	fmt.Println("done")
+
+	/** === Unmute Command === **/
+	fmt.Print(timestamp()+"Running /unmute tests.... ")
 	fmt.Println("done")
 
 	fmt.Println("======= Command Tests Succeeded =======")

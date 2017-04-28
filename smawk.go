@@ -85,32 +85,50 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 	if update.Message != nil && update.Message.Text != "" {
 		// Get the command and remove the trailing '@smawk_bot' (if it exists)
 		switch cmd := strings.Split(update.Message.Text, " "); strings.Replace(cmd[0],"@smawk_bot","",-1) {
+			/* ============================================ */
+			/* NOTE: Commands are grouped by their filename */
+			/* ============================================ */
+			/* ====== Gifs ====== */
+			case "/hype":
+				return bot.ExecuteHypeCommand(update)
+
+			/* ====== Labels ====== */
+			case "/label":
+				return bot.ExecuteLabelCommand(update, cmd)
+			case "/whois":
+				return bot.ExecuteWhoisCommand(update, cmd)
+
+			/* ====== Misc ====== */
+			case "/id":
+				return bot.ExecuteIDCommand(update)
+			case "/smawk", "/me":
+				return bot.ExecuteSMAWKCommand(update, cmd)
+			case "/start":
+				return bot.ExecuteStartCommand(update)
+			case "/version":
+				return bot.ExecuteVersionCommand(update)
+
+			/* ====== Notification ====== */
 			case "/all", "/here":
 				return bot.ExecuteAllCommand(update)
+			case "/mute":
+				return bot.ExecuteMuteCommand(update, cmd)
+			case "/unmute":
+				return bot.ExecuteUnmuteCommand(update, cmd)
+
+			/* ====== Registratoin ====== */
+
+			/* ====== Scoring ====== */
 			case "/bless":
 				return bot.ExecuteBlessCommand(update, cmd)
 			case "/curse":
 				return bot.ExecuteCurseCommand(update, cmd)
 			case "/downvote":
 				return bot.ExecuteDownvoteCommand(update, cmd)
-			case "/hype":
-				return bot.ExecuteHypeCommand(update)
-			case "/id":
-				return bot.ExecuteIDCommand(update)
-			case "/label":
-				return bot.ExecuteLabelCommand(update, cmd)
 			case "/score":
 				return bot.ExecuteScoreCommand(update, cmd)
-			case "/smawk", "/me":
-				return bot.ExecuteSMAWKCommand(update, cmd)
-			case "/start":
-				return bot.ExecuteStartCommand(update)
 			case "/upvote":
 				return bot.ExecuteUpvoteCommand(update, cmd)
-			case "/version":
-				return bot.ExecuteVersionCommand(update)
-			case "/whois":
-				return bot.ExecuteWhoisCommand(update, cmd)
 		}
 	}
 

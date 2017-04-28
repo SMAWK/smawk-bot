@@ -7,8 +7,7 @@
 - Add Reminder Feature
 - Add Lootbox Feature
 - Add Birthday Reminder
-- Add a flag so specific users aren't targeted by /all
-- `mute` and `unmute`
 - Register and Deregister
 - upvote downvote handle better
 - Meme bot
+- Help

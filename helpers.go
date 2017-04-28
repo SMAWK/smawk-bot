@@ -54,7 +54,7 @@ func (bot *SmawkBot) EnterScore(chat_id int64, username string, reason string, a
 }
 
 // IsUser is used to tell if a user that send a chat message is actually a part of SMÄWK proper
-func (bot *SmawkBot) isUser(username string) bool {
+func (bot *SmawkBot) isSmawkUser(username string) bool {
 	// Connect to our database
 	db, err := ConnectDB(bot.dbPass)
 	if err != nil {
@@ -63,7 +63,7 @@ func (bot *SmawkBot) isUser(username string) bool {
 	defer db.Close()
 
 	// Create our query
-	users, err := db.Query("SELECT username FROM users")
+	users, err := db.Query("SELECT username FROM users WHERE chat_id='-9125034'")
 	if err != nil {
 		log.Fatal(err)
 	}
