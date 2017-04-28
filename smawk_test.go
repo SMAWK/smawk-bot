@@ -1,49 +1,32 @@
 package smawk_test
 
 import (
-	"bytes"
-	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/go-sql-driver/mysql"
+	"github.com/bmatt468/smawk-bot"
 	"gopkg.in/telegram-bot-api.v4"
 	"log"
-	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 // Create our constants for use throughout the testing functions
 const (
-	SMAWKToken              = "249930361:AAHz1Gksb-eT0SQG47lDb7WbJxujr7kGCkU"
-	ChatID                 	= 55997207
+	SMAWKToken = "249930361:AAHz1Gksb-eT0SQG47lDb7WbJxujr7kGCkU"
+	ChatID = 55997207
+	SMAWKChatID = -9125034
+	Version = "2.0.0"
 )
 
 /* ================================================ */
 /*                 Helper functions                 */
 /* ================================================ */
 
-// getBot is a helper function that returns the bot object
-// to each of the test functions
-func getBot(t *testing.T) (*tgbotapi.BotAPI, error) {
-	// Get the bot using the SMÄWK token
-	bot, err := tgbotapi.NewBotAPI(SMAWKToken)
-
-	// Check to see if something bad happened and break if need be
-	if err != nil {
-		log.Fatal(err)
-		t.FailNow()
-	}
-
-	// Otherwise return our bot
-	return bot, err
-}
-
 // generateUpdate is a helper function that generates a test update
 // (see Update sruct in tgbotapi/types)
-func generateUpdate(t *testing.T, cmd string) (tgbotapi.Update, error) {
+func GenerateUpdate(cmd string) (tgbotapi.Update) {
 	// Create our Update Var
 	var upd tgbotapi.Update
 
@@ -53,13 +36,13 @@ func generateUpdate(t *testing.T, cmd string) (tgbotapi.Update, error) {
 		"message":{
 			"message_id":178,
 			"from":{
-				"id":55997207,
+				"id":`+strconv.Itoa(ChatID)+`,
 				"first_name":"Benjamin",
 				"last_name":"Matthews",
 				"username":"bnmtthews"
 			},
 			"chat":{
-				"id":55997207,
+				"id":`+strconv.Itoa(ChatID)+`,
 				"first_name":"Benjamin",
 				"last_name":"Matthews",
 				"username":"bnmtthews",
@@ -79,259 +62,403 @@ func generateUpdate(t *testing.T, cmd string) (tgbotapi.Update, error) {
 	json.Unmarshal(updjson, &upd)
 
 	// Return our update
-	return upd, nil
+	return upd
 }
 
-func connect() (*sql.DB, error) {
-	cfg := &mysql.Config {
-		User: "smawk-bot",
-		Passwd: "SM@WKisGR8",
-		Net: "tcp",
-		Addr: "107.170.45.12:3306",
-		DBName: "smawk-bot",
-	}
-	return sql.Open("mysql", cfg.FormatDSN())
+func timestamp() string {
+	t := time.Now()
+	return t.Format("2006-01-02 15:04:05.000 ");
 }
 
 /* ================================================ */
 /*                Testing functions                 */
 /* ================================================ */
+func TestBot(t *testing.T) {
+	// ==================== //
+	// Start Helper Tests   //
+	// ==================== //
+	fmt.Println("======= Starting Helper Tests =======")
 
-// TestLoadBot tests to see if the bot is loading and authenticated properly
-func TestLoadBot(t *testing.T) {
+	/** === Loading Bot === **/
+	fmt.Print(timestamp()+"Loading SMÄWK_bot.... ")
+
 	// Fetch our bot using the helper function
-	_, err := getBot(t)
+	bot, err := smawk.Connect(SMAWKToken,false,DBPassword)
+	bot.Testing = true;
 
 	// Check to see if something bad happened and break if need be
 	if err != nil {
 		log.Fatal(err)
 		t.FailNow()
 	}
-
 	// Otherwise, log to the console that we authenticated properly
-	log.Printf("SMÄWK_bot authenticated")
-}
+	fmt.Println("done")
 
-// TestSendMessage tests to see if the bot can properly send a message to the provided
-// chatID (the private chat of the user)
-func iTestSendMessage(t *testing.T) {
-	// Fetch our bot using the helper function
-	bot, _ := getBot(t)
-
-	// Generate our message and send it to the private chat
-	msg := tgbotapi.NewMessage(ChatID, "SMÄWKBot:Go - Test message.")
-	_, err := bot.Send(msg)
-
-	// Check to see if something bad happened and break if need be
+	/** === Database connection === **/
+	fmt.Print(timestamp()+"Connecting to database.... ")
+	db, err := smawk.ConnectDB(DBPassword)
 	if err != nil {
 		log.Fatal(err)
 		t.FailNow()
 	}
+	defer db.Close()
 
-	// Otherwise, log to the console that the message was sent
-	log.Printf("Test message sent")
-}
-
-// TestIDCommand tests to make sure that the bot will properly send an
-// ID to a private chat while refusing to send to a public chat
-func iTestIDCommand(t *testing.T) {
-	// Fetch our bot using the helper function
-	bot, _ := getBot(t)
-
-	update, _ := generateUpdate(t,"/id")
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Your chat ID is: "+strconv.FormatInt(update.Message.Chat.ID,10))
-    bot.Send(msg)
-}
-
-// TestContainedHypeCommand tests to make sure that the bot will properly handle a /hype
-// command that is contained inside of a string
-func iTestContainedHypeCommand(t *testing.T) {
-	// Fetch our bot using the helper function
-	bot, _ := getBot(t)
-
-	update, _ := generateUpdate(t,"test /hype")
-
-	if (strings.Contains(update.Message.Text, "/hype") || strings.Contains(update.Message.Text, "/hype@smawk_bot")) {
-        // Make sure that we have the hype command in our working directory
-	    if _, err := os.Stat("hype.gif"); os.IsNotExist(err) {
-	        // NOOOO!!!! WE DON'T HAVE THE GIF!!!!!
-	        // Fetch it from the SMAWK source
-	        cmdname := "curl"
-	        cmdargs := []string{"-O","http://mysimplethings.xyz/img/smawk-bot/hype.gif"}
-
-	        cmd := exec.Command(cmdname,cmdargs...)
-	        var stderr bytes.Buffer
-	        cmd.Stderr = &stderr
-	        err := cmd.Run()
-	        if err != nil {
-	            fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-	        }
-	    }
-
-	    doc := tgbotapi.NewDocumentUpload(update.Message.Chat.ID, "hype.gif")
-	    bot.Send(doc)
-    }
-}
-
-// TestDatabaseConnection Makes sure that we are connected to our database where the scores are located
-func TestDatabaseConnection(t *testing.T) {
-	db, err := connect()
-    if err != nil {
-      	log.Fatal(err)
-		t.FailNow()
-    }
-    defer db.Close()
-
-    err = db.Ping()
-    if err != nil {
-        log.Fatal(err)
-		t.FailNow()
-    }
-
-    log.Printf("DB Connection Successful")
-}
-
-// TestUsersFetch makes a test call to the database to get the list of users in the database
-func TestUsersFetch(t *testing.T) {
-	db, err := connect()
-	if err != nil {
-      	log.Fatal(err)
-		t.FailNow()
-    }
-    defer db.Close()
-
-    users, err := db.Query("SELECT id, username, first_name, last_name FROM users")
-    if err != nil {
-            log.Fatal(err)
-    }
-    defer users.Close()
-    for users.Next() {
-            var id string
-            var username string
-            var first_name string
-            var last_name string
-            if err := users.Scan(&id, &username, &first_name, &last_name); err != nil {
-                    log.Fatal(err)
-            }
-            fmt.Printf("ID:%s Username:%s Name: %s %s\n", id, username, first_name, last_name)
-    }
-    if err := users.Err(); err != nil {
-            log.Fatal(err)
-    }
-
-    fmt.Printf("\n=============\n")
-}
-
-// TestScoreCommand makes sure that we can connect to the database and properly obtain the score for everybody
-func TestScoreCommand(t *testing.T) {
-	db, err := connect()
-	if err != nil {
-      	log.Fatal(err)
-		t.FailNow()
-    }
-    defer db.Close()
-
-    users, err := db.Query("SELECT u.username, SUM(s.point) as 'points' FROM scores s JOIN users u on u.id = s.user_id WHERE s.chat_id = -9125034 GROUP BY s.user_id")
-    if err != nil {
-            log.Fatal(err)
-    }
-    defer users.Close()
-    for users.Next() {
-            var username string
-            var points string
-            if err := users.Scan(&username, &points); err != nil {
-                    log.Fatal(err)
-            }
-            fmt.Printf("%s: %s\n", username, points)
-    }
-    if err := users.Err(); err != nil {
-            log.Fatal(err)
-    }
-    fmt.Printf("\n=============\n")
-}
-
-func TestUserScoreCommand(t *testing.T) {
-	db, err := connect()
-	if err != nil {
-      	log.Fatal(err)
-		t.FailNow()
-    }
-    defer db.Close()
-
-    update, _ := generateUpdate(t,"/score @bnmtthews")
-    cmd := strings.Split(update.Message.Text, " ")
-
-    var total_points sql.NullString
-    err = db.QueryRow("SELECT SUM(s.point) FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username=?", cmd[1]).Scan(&total_points)
-    if err != nil {
-            log.Fatal(err)
-    } else if err == sql.ErrNoRows {
-    	fmt.Printf("User %s does not exist.\n",cmd[1])
-    	return
-    } else if !total_points.Valid {
-    	fmt.Printf("User %s does not exist.\n",cmd[1])
-    	return
-    }
-
-    fmt.Printf("%s has %s points, of which:\n",cmd[1],total_points.String)
-
-    users, err := db.Query("SELECT SUM(s.point) as points, s.reason FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username = '"+cmd[1]+"' GROUP BY s.reason")
-    if err != nil {
-            log.Fatal(err)
-    }
-    defer users.Close()
-    for users.Next() {
-            var points string
-            var reason string
-            if err := users.Scan(&points, &reason); err != nil {
-                    log.Fatal(err)
-            }
-            fmt.Printf("%s is for %s\n", points, reason)
-    }
-    if err := users.Err(); err != nil {
-            log.Fatal(err)
-    }
-    fmt.Printf("\n=============\n")
-}
-
-func TestLabelsCommand(t *testing.T) {
-	db, err := connect()
-	if err != nil {
-      	log.Fatal(err)
-		t.FailNow()
-    }
-    defer db.Close()
-
-	// Create our query
-	labels, err := db.Query("SELECT u.username, u.label FROM users u")
+	err = db.Ping()
 	if err != nil {
 		log.Fatal(err)
+		t.FailNow()
 	}
-	defer labels.Close()
+	fmt.Println("done")
+	fmt.Println("======= Helper Tests Succeeded =======\n")
 
-	// Get our scores
-	msg_string := ""
+	// ==================== //
+	// Start Command Tests  //
+	// ==================== //
+	fmt.Println("======= Starting Command Tests =======")
 
-	for labels.Next() {
-		var username string
-		var label sql.NullString
-		var labelString string
+	/** === Start Command === **/
+	fmt.Print(timestamp()+"Running /start tests.... ")
+	upd := GenerateUpdate("/start")
+	_,err = bot.ParseAndExecuteUpdate(upd)
 
-		if err := labels.Scan(&username,&label); err != nil {
-			log.Fatal(err)
-		}
-
-		if !label.Valid {
-			labelString = "No Title"
-		} else {
-			labelString = label.String
-		}
-		msg_string += username[1:]+": "+labelString+"\n"
+	if err != nil {
+		log.Fatal(err)
+		t.FailNow();
 	}
-	if err := labels.Err(); err != nil {
-			log.Fatal(err)
+	fmt.Println("done")
+
+	/** === ID Command === **/
+	fmt.Print(timestamp()+"Running /id tests.... ")
+	upd = GenerateUpdate("/id")
+	msg,err := bot.ParseAndExecuteUpdate(upd)
+
+	if err != nil {
+		log.Fatal(err)
+		t.FailNow();
 	}
 
-	fmt.Print(msg_string)
+	strText := msg.(tgbotapi.Message).Text
+	if strings.Replace(strText, "Your chat ID is: ","",-1) != strconv.Itoa(ChatID) {
+		log.Fatal("id mismatch")
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Register Command === **/
+	fmt.Print(timestamp()+"Running /register tests.... ")
+	upd = GenerateUpdate("/register")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	fmt.Println("done")
+
+	/** === Deregister Command === **/
+	fmt.Print(timestamp()+"Running /deregister tests.... ")
+	//upd = GenerateUpdate("/deregister")
+	//msg,err = bot.ParseAndExecuteUpdate(upd)
+	fmt.Println("done")
+
+	/** === SMAWK Command === **/
+	fmt.Print(timestamp()+"Running /smawk tests.... ")
+	// Check to see if message is returned with proper user
+	upd = GenerateUpdate("/smawk wheeee")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strings.Replace(strText, upd.Message.From.UserName+" ","",-1) != "wheeee" {
+		log.Fatalf("/smawk string mismatch. Expected wheeee - got %s",strText)
+		t.FailNow();
+	}
+
+	// Check to see if response is empty if not a user
+	upd = GenerateUpdate("/smawk fail_plox")
+	upd.Message.From.UserName = "not_bnmtthews"
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	if msg != (tgbotapi.Message{}) {
+		log.Fatalf("/smawk not failing on bad user")
+		t.FailNow();
+	}
+
+	// Make sure phrases work
+	upd = GenerateUpdate("/smawk abc def ghi")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strings.Replace(strText, upd.Message.From.UserName+" ","",-1) != "abc def ghi" {
+		log.Fatalf("/smawk string mismatch. Expected wheeee - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Me Command === **/
+	fmt.Print(timestamp()+"Running /me tests.... ")
+	// Check to see if message is returned with proper user
+	upd = GenerateUpdate("/me wheeee")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strings.Replace(strText, upd.Message.From.UserName+" ","",-1) != "wheeee" {
+		log.Fatalf("/me string mismatch. Expected wheeee - got %s",strText)
+		t.FailNow();
+	}
+
+	// Check to see if response is empty if not a user
+	upd = GenerateUpdate("/me fail_plox")
+	upd.Message.From.UserName = "not_bnmtthews"
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	if msg != (tgbotapi.Message{}) {
+		log.Fatalf("/me not failing on bad user")
+		t.FailNow();
+	}
+
+	// Make sure phrases work
+	upd = GenerateUpdate("/me abc def ghi")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strings.Replace(strText, upd.Message.From.UserName+" ","",-1) != "abc def ghi" {
+		log.Fatalf("/me string mismatch. Expected wheeee - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === All Command === **/
+	fmt.Print(timestamp()+"Running /all tests.... ")
+
+	upd = GenerateUpdate("/all")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	allExpectedString := "@bnmtthews @testUser"
+	if msg.(tgbotapi.Message).Text != allExpectedString {
+		log.Fatalf("/all fail. Expected %s - got %s",allExpectedString,msg.(tgbotapi.Message).Text)
+	}
+	fmt.Println("done")
+
+	/** === Hype Command === **/
+	fmt.Print(timestamp()+"Running /hype tests.... ")
+	upd = GenerateUpdate("/hype")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	fmt.Println("done")
+
+	/** === Whois Command === **/
+	fmt.Print(timestamp()+"Running /whois tests.... ")
+	upd = GenerateUpdate("/whois")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Correct Usage: /whois @username" {
+		log.Fatalf("/whois string mismatch. Expected Correct Usage: /whois @username - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/whois @testUser")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@testUser is known as This Is A Test User" {
+		log.Fatalf("/whois string mismatch. Expected \"@testUser is known as This Is A Test User\" - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Label Command === **/
+	fmt.Print(timestamp()+"Running /label tests.... ")
+	upd = GenerateUpdate("/label")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Correct Usage: /label @username <name>" {
+		log.Fatalf("/whois string mismatch. Expected \"Correct Usage: /label @username <name>\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/label @bnmtthews test")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "One must not label themself." {
+		log.Fatalf("/whois string mismatch. Expected \"One must not label themself.\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/label @testUser foo")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@testUser is now foo" {
+		log.Fatalf("/whois string mismatch. Expected \"@testUser is now foo\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/whois @testUser")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@testUser is known as foo" {
+		log.Fatalf("/whois string mismatch. Expected \"@testUser is known as foo\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/label @testUser This Is A Test User")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@testUser is now This Is A Test User" {
+		log.Fatalf("/whois string mismatch. Expected \"@testUser is now This Is A Test User\" - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Score Command === **/
+	fmt.Print(timestamp()+"Running /score tests.... ")
+	upd = GenerateUpdate("/score")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "testUser: 1\nbnmtthews: 0" {
+		log.Fatalf("/score string mismatch. Expected \"bnmtthews: 0\ntestUser: 1\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/score @testUser")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@testUser has 1 points, of which:\n1 is for Test" {
+		log.Fatalf("/whois string mismatch. Expected \"@bnmtthews has 1 points, of which:\n1 is for Test\" - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Upvote Command === **/
+	fmt.Print(timestamp()+"Running /upvote tests.... ")
+	upd = GenerateUpdate("/upvote")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Correct Usage: /upvote @username [reason]" {
+		log.Fatalf("/whois string mismatch. Expected \"Correct Usage: /upvote @username [reason]\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/upvote @foo")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@foo has been upvoted 1 point" {
+		log.Fatalf("/whois string mismatch. Expected \"@foo has been upvoted 1 point\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/upvote @foo bar")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@foo has been upvoted 1 point for bar" {
+		log.Fatalf("/whois string mismatch. Expected \"@foo has been upvoted 1 point for bar\" - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Downvote Command === **/
+	fmt.Print(timestamp()+"Running /downvote tests.... ")
+	upd = GenerateUpdate("/downvote")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Correct Usage: /downvote @username [reason]" {
+		log.Fatalf("/whois string mismatch. Expected \"Correct Usage: /upvote @username [reason]\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/downvote @foo")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@foo has been downvoted 1 point" {
+		log.Fatalf("/whois string mismatch. Expected \"@foo has been downvoted 1 point\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/downvote @foo bar")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@foo has been downvoted 1 point for bar" {
+		log.Fatalf("/whois string mismatch. Expected \"@foo has been downvoted 1 point for bar\" - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Bless Command === **/
+	fmt.Print(timestamp()+"Running /bless tests.... ")
+	upd = GenerateUpdate("/bless")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "No blessing. All are equal in SMÄWK's eyes." {
+		log.Fatalf("/whois string mismatch. Expected \"No blessing. All are equal in SMÄWK's eyes.\" - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Curse Command === **/
+	fmt.Print(timestamp()+"Running /curse tests.... ")
+	upd = GenerateUpdate("/curse")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "No cursing. SMÄWK does not condone cursing." {
+		log.Fatalf("/whois string mismatch. Expected \"No cursing. SMÄWK does not condone cursing.\" - got %s",strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Version Command === **/
+	fmt.Print(timestamp()+"Running /version tests.... ")
+	upd = GenerateUpdate("/version")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Current Bot Version: " + Version {
+		log.Fatalf("/version string mismatch. Expected Current Bot Version: %s. Got %s",Version,strText)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
+	/** === Mute Command === **/
+	fmt.Print(timestamp()+"Running /mute tests.... ")
+	upd = GenerateUpdate("/mute fail")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "Correct Usage: /mute" {
+		log.Fatalf("/mute fail. Expected \"Correct Usage: /mute\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+
+	upd = GenerateUpdate("/mute")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "@bnmtthews has been muted." {
+		log.Fatalf("/mute fail. Expected \"@bnmtthews has been muted.\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+
+	upd = GenerateUpdate("/all")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "@testUser" {
+		log.Fatalf("/mute fail. Expected \"@testUser\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+	fmt.Println("done")
+
+	/** === Unmute Command === **/
+	fmt.Print(timestamp()+"Running /unmute tests.... ")
+	upd = GenerateUpdate("/unmute fail")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "Correct Usage: /unmute" {
+		log.Fatalf("/mute fail. Expected \"Correct Usage: /unmute\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+
+	upd = GenerateUpdate("/unmute")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "@bnmtthews has been unmuted." {
+		log.Fatalf("/mute fail. Expected \"@bnmtthews has been unmuted.\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+
+	upd = GenerateUpdate("/all")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	if msg.(tgbotapi.Message).Text != "@bnmtthews @testUser" {
+		log.Fatalf("/unmute fail. Expected \"@bnmtthews @testUser\" - got %s",msg.(tgbotapi.Message).Text)
+	}
+	fmt.Println("done")
+
+	fmt.Println("======= Command Tests Succeeded =======")
 }
