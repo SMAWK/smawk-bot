@@ -58,32 +58,8 @@ go install
 ```
 
 #Commands
-###/start
-`/start` is used to start the bot in a chat (both group and personal). It is a command that is required by Telegram; when run, it will return a message to the chat if it started successfully.
-
-###/id
-`id` can only be used in a personal chat. It will return your unique chat ID; this ID is helpful if you want to do work on your own instance of the bot.
-
-###/hype
-`/hype` returns the most-hyped-up gif of 2016. You just have to see it to believe it.
-
-###/score
-`/score` will display the current score of everyone in the chat (ordered by points). If you provide the optional username parameter, it will output the specific reasons for that users score (again, ordered by points)
-
-Usage: `/score [<user>]`
-
-
-###/upvote
-`/upvote` is the command to give a user points. A username is required for the command to work, and you are allowed to add an optional reason (should you desire)
-
-Usage: `/upvote <user> [<reason>]`
-
-
-###/downvote
-`/downvote` is the command to take points away from a user. You must provide a username for a person, but the reason for your downvote is optional.
-
-Usage: `/downvote <user> [<reason>]`
-
+###/all or /here
+`/all` or `/here` will notify all of the users that have registered in the channel.
 
 ###/bless
 `/bless` is a special command that is reserved for the 'clergy' (a.k.a. the people ordained by the church of dude). It grants 3 points to the user of choice.
@@ -95,12 +71,51 @@ Usage: `/bless <user>`
 
 Usage: `/curse <user>`
 
+###/downvote
+`/downvote` is the command to take points away from a user. You must provide a username for a person, but the reason for your downvote is optional.
+
+Usage: `/downvote <user> [<reason>]`
+
+###/hype
+`/hype` returns the most-hyped-up gif of 2016. You just have to see it to believe it.
+
+###/id
+`id` can only be used in a personal chat. It will return your unique chat ID; this ID is helpful if you want to do work on your own instance of the bot.
+
+###/label
+`/label` will attach a label to a user for that chat. This label can be displayed with the `/whois` command.
+
+Usage: `/label <user> <name>`
+
+###/score
+`/score` will display the current score of everyone in the chat (ordered by points). If you provide the optional username parameter, it will output the specific reasons for that users score (again, ordered by points)
+
+Usage: `/score [<user>]`
+
 ###/smawk or /me
 `/smawk` or `/me` is a special command that can only be executed from a private chat (and only by a member of SMÄWK). When run, it will print a message in the group chat in third-person.
 
 Usage: `/smawk <statement>`
 
 Example: `/smawk sighs` would output `<username> sighs` in the group chat.
+
+###/start
+`/start` is used to start the bot in a chat (both group and personal). It is a command that is required by Telegram; when run, it will return a message to the chat if it started successfully.
+
+###/upvote
+`/upvote` is the command to give a user points. A username is required for the command to work, and you are allowed to add an optional reason (should you desire)
+
+Usage: `/upvote <user> [<reason>]`
+
+###/version
+`/version` will return the current version that the bot is running. This string can be useful for helping in debugging.
+
+###/whois
+`/whois` will return the label that has been assigned for that user.
+
+Usage: `/upvote <user>`
+
+
 
 # Adding Features
 Any command will have an assigned controller function attached to it. These functions should be placed together inside of `smawk.go`. Please look at how the other commands are called, and replicate that style.

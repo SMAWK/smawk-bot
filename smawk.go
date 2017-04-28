@@ -85,31 +85,35 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 	if update.Message != nil && update.Message.Text != "" {
 		// Get the command and remove the trailing '@smawk_bot' (if it exists)
 		switch cmd := strings.Split(update.Message.Text, " "); strings.Replace(cmd[0],"@smawk_bot","",-1) {
-			case "/start":
-				return bot.ExecuteStartCommand(update)
-			case "/id":
-				return bot.ExecuteIDCommand(update)
-			case "/smawk", "/me":
-				return bot.ExecuteSMAWKCommand(update, cmd)
-			case "/hype":
-				return bot.ExecuteHypeCommand(update)
 			case "/all", "/here":
 				return bot.ExecuteAllCommand(update)
+
+			case "/downvote":
+				return bot.ExecuteDownvoteCommand(update, cmd)
+			case "/hype":
+				return bot.ExecuteHypeCommand(update)
+			case "/id":
+				return bot.ExecuteIDCommand(update)
 			case "/label":
 				return bot.ExecuteLabelCommand(update, cmd)
-			case "/whois":
-				return bot.ExecuteWhoisCommand(update, cmd)
-			case "/version":
-				return bot.ExecuteVersionCommand(update)
 			case "/score":
 				return bot.ExecuteScoreCommand(update, cmd)
-
-
-
+			case "/smawk", "/me":
+				return bot.ExecuteSMAWKCommand(update, cmd)
+			case "/start":
+				return bot.ExecuteStartCommand(update)
 			case "/upvote":
-				bot.ExecuteUpvoteCommand(update, cmd)
-			case "/downvote":
-				bot.ExecuteDownvoteCommand(update, cmd)
+				return bot.ExecuteUpvoteCommand(update, cmd)
+			case "/version":
+				return bot.ExecuteVersionCommand(update)
+			case "/whois":
+				return bot.ExecuteWhoisCommand(update, cmd)
+
+
+
+
+
+
 			case "/bless":
 				bot.ExecuteBlessCommand(update, cmd)
 			case "/curse":

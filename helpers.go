@@ -43,8 +43,17 @@ func ConnectDB(password string) (*sql.DB, error) {
 }
 
 // EnterScore is responsible for updating the database with any upvote, downvote, bless, or curse commands
-func EnterScore() {
+func (bot *SmawkBot) EnterScore(chat_id int64, username string, reason string, amount string) (error) {
+	// Connect to our database
+	db, err := ConnectDB(bot.dbPass)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 
+	_, err = db.Query("INSERT INTO scores(user_id,point,chat_id,reason) SELECT id,?,?,? FROM users u WHERE u.username=?",amount,chat_id,reason,username)
+
+	return err
 }
 
 // IsUser is used to tell if a user that send a chat message is actually a part of SMÄWK proper

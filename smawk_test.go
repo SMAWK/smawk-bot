@@ -262,14 +262,84 @@ func TestBot(t *testing.T) {
 	fmt.Print(timestamp()+"Running /score tests.... ")
 	upd = GenerateUpdate("/score")
 	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "bnmtthews: 1" {
+		log.Fatalf("/whois string mismatch. Expected \"bnmtthews: 1\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/score @bnmtthews")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@bnmtthews has 1 points, of which:\n1 is for Test" {
+		log.Fatalf("/whois string mismatch. Expected \"@bnmtthews has 1 points, of which:\n1 is for Test\" - got %s",strText)
+		t.FailNow();
+	}
+
 	fmt.Println("done")
 
 	/** === Upvote Command === **/
 	fmt.Print(timestamp()+"Running /upvote tests.... ")
+	upd = GenerateUpdate("/upvote")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Correct Usage: /upvote @username [reason]" {
+		log.Fatalf("/whois string mismatch. Expected \"Correct Usage: /upvote @username [reason]\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/upvote @foo")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@foo has been upvoted 1 point" {
+		log.Fatalf("/whois string mismatch. Expected \"@foo has been upvoted 1 point\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/upvote @foo bar")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@foo has been upvoted 1 point for bar" {
+		log.Fatalf("/whois string mismatch. Expected \"@foo has been upvoted 1 point for bar\" - got %s",strText)
+		t.FailNow();
+	}
+
 	fmt.Println("done")
 
 	/** === Downvote Command === **/
 	fmt.Print(timestamp()+"Running /downvote tests.... ")
+	upd = GenerateUpdate("/downvote")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "Correct Usage: /downvote @username [reason]" {
+		log.Fatalf("/whois string mismatch. Expected \"Correct Usage: /upvote @username [reason]\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/downvote @foo")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@foo has been downvoted 1 point" {
+		log.Fatalf("/whois string mismatch. Expected \"@foo has been downvoted 1 point\" - got %s",strText)
+		t.FailNow();
+	}
+
+	upd = GenerateUpdate("/downvote @foo bar")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+
+	strText = msg.(tgbotapi.Message).Text
+	if strText != "@foo has been downvoted 1 point for bar" {
+		log.Fatalf("/whois string mismatch. Expected \"@foo has been downvoted 1 point for bar\" - got %s",strText)
+		t.FailNow();
+	}
+
 	fmt.Println("done")
 
 	/** === Bless Command === **/
