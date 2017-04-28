@@ -8,7 +8,7 @@ Please use the following format when you update the changelog:
 ```
 
 #Changelog
-###v2.0.0
+###v2.0.0-beta
 - VERSION 2.0.0!!!! (a.k.a. let's do this again)
 - Refactors Library Codebase
 	- ParseAndExecuteUpdates() now uses a more idiomatic `switch` vs `if / else`
@@ -32,6 +32,7 @@ Please use the following format when you update the changelog:
 - Commands are now split into several files to help find each other
 - `/bless` and `/curse` have been removed. We are all equal in SMÄWK's sight
 - The bot can now be deployed in any group chat, and should work fine
+- The bot won't run commands if the user isn't registered
 - New Commands (Say What!?)
 	- `all` - (yes technically not new, but it's back)
 	- `deregister` - Deregisters a user from using the chat calls

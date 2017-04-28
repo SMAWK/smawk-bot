@@ -18,7 +18,6 @@ const (
 	ChatID = 55997207
 	SMAWKChatID = -9125034
 	Version = "2.0.0"
-	DBPassword = "SM@WKisGR8"
 )
 
 /* ================================================ */
@@ -143,6 +142,18 @@ func TestBot(t *testing.T) {
 		log.Fatal("id mismatch")
 		t.FailNow();
 	}
+	fmt.Println("done")
+
+	/** === Register Command === **/
+	fmt.Print(timestamp()+"Running /register tests.... ")
+	upd = GenerateUpdate("/register")
+	msg,err = bot.ParseAndExecuteUpdate(upd)
+	fmt.Println("done")
+
+	/** === Deregister Command === **/
+	fmt.Print(timestamp()+"Running /deregister tests.... ")
+	//upd = GenerateUpdate("/deregister")
+	//msg,err = bot.ParseAndExecuteUpdate(upd)
 	fmt.Println("done")
 
 	/** === SMAWK Command === **/
@@ -297,15 +308,15 @@ func TestBot(t *testing.T) {
 	upd = GenerateUpdate("/score")
 	msg,err = bot.ParseAndExecuteUpdate(upd)
 	strText = msg.(tgbotapi.Message).Text
-	if strText != "bnmtthews: 1\ntestUser: 0" {
-		log.Fatalf("/whois string mismatch. Expected \"bnmtthews: 1\ntestUser: 0\" - got %s",strText)
+	if strText != "testUser: 1\nbnmtthews: 0" {
+		log.Fatalf("/score string mismatch. Expected \"bnmtthews: 0\ntestUser: 1\" - got %s",strText)
 		t.FailNow();
 	}
 
-	upd = GenerateUpdate("/score @bnmtthews")
+	upd = GenerateUpdate("/score @testUser")
 	msg,err = bot.ParseAndExecuteUpdate(upd)
 	strText = msg.(tgbotapi.Message).Text
-	if strText != "@bnmtthews has 1 points, of which:\n1 is for Test" {
+	if strText != "@testUser has 1 points, of which:\n1 is for Test" {
 		log.Fatalf("/whois string mismatch. Expected \"@bnmtthews has 1 points, of which:\n1 is for Test\" - got %s",strText)
 		t.FailNow();
 	}
@@ -405,14 +416,6 @@ func TestBot(t *testing.T) {
 		log.Fatalf("/version string mismatch. Expected Current Bot Version: %s. Got %s",Version,strText)
 		t.FailNow();
 	}
-	fmt.Println("done")
-
-	/** === Register Command === **/
-	fmt.Print(timestamp()+"Running /register tests.... ")
-	fmt.Println("done")
-
-	/** === Deregister Command === **/
-	fmt.Print(timestamp()+"Running /deregister tests.... ")
 	fmt.Println("done")
 
 	/** === Mute Command === **/

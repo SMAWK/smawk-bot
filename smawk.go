@@ -82,7 +82,7 @@ func (bot *SmawkBot) Listen(token string) <-chan tgbotapi.Update {
 // and isolates the command and arguments, then passes the information
 // on to the proper method
 func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{}, error) {
-	if update.Message != nil && update.Message.Text != "" {
+	if update.Message != nil {
 		// Get the command and remove the trailing '@smawk_bot' (if it exists)
 		switch cmd := strings.Split(update.Message.Text, " "); strings.Replace(cmd[0],"@smawk_bot","",-1) {
 			/* ============================================ */
@@ -117,6 +117,10 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 				return bot.ExecuteUnmuteCommand(update, cmd)
 
 			/* ====== Registration ====== */
+			case "/deregister":
+				return bot.ExecuteDeregisterCommand(update, cmd)
+			case "/register":
+				return bot.ExecuteRegisterCommand(update, cmd)
 
 			/* ====== Scoring ====== */
 			case "/bless":

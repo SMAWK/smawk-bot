@@ -6,7 +6,6 @@
 - Add Reminder Feature
 - Add Lootbox Feature
 - Add Birthday Reminder
-- Register and Deregister
 - upvote downvote handle better
 - Meme bot
 - Help
