@@ -1,16 +1,11 @@
 package smawk_test
 
 import (
-	//"bytes"
-	//"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/bmatt468/smawk-bot"
-	//"github.com/go-sql-driver/mysql"
 	"gopkg.in/telegram-bot-api.v4"
 	"log"
-	//"os"
-	//"os/exec"
 	"strconv"
 	"strings"
 	"testing"
