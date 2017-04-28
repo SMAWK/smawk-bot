@@ -11,3 +11,4 @@
 - `mute` and `unmute`
 - Register and Deregister
 - upvote downvote handle better
+- Meme bot
