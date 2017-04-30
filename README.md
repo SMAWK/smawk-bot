@@ -8,8 +8,8 @@ If you are new to Go, I would hightly recommend [taking the tour](tour.golang.or
 
 Once you have taken the steps to understand the nature of Go, you are ready to jump in and set up a bot of your own!
 
-#Setting up the bot
-###Controllers
+# Setting up the bot
+### Controllers
 This bot is a [library](https://golang.org/doc/code.html#Library), meaning that it can not run on its own. Rather, it offers methods to be used by an external controller. Most controllers will look nearly 100% the same, there isn't much difference between them. This bot is currently being run by [this controller](https://github.com/bmatt468/smawk-bot-controller). I would recommend visiting that repo and looking through the README to understand the more detailed inner workings of a bot controller. Essentially the controller is responsible for:
 
 - Controlling the access token
@@ -17,7 +17,7 @@ This bot is a [library](https://golang.org/doc/code.html#Library), meaning that 
 - Listening on the webhook / fetching updates
 - Calling this bots execute method for the updates
 
-###Interfacing with the Bot
+### Interfacing with the Bot
 To interface with this API, add the following to the top of your controller:
 ```Go
 import (
@@ -27,20 +27,20 @@ import (
 
 After importing, you can access each of the bmatt468/smawk-bot methods from your controller.
 
-#Launching the bot
+# Launching the bot
 There are two ways to lauch the bot. One is launching inisde of the controller source, the other is installing a compiled binary and launching there.
 
-###Controller Source (quick and easy)
+### Controller Source (quick and easy)
 To launch from the controller source, navigate to the working directory of your controller and run
 ```Shell
 go build
 ./<compiled_binary>
 ```
 
-###Installed Binary (slightly more complex but recommended)
+### Installed Binary (slightly more complex but recommended)
 Go has the ability to install a binary to `$GOPATH/bin`. During your setup of Go, you should have added this directory to your `PATH`, thus allowing the controller to be launched directly from the command line. To install the binary you have two options:
 
-####Go Get (recommended)
+#### Go Get (recommended)
 These commands will take care of fetching your controller (and any updates to it), any dependencies (and updates), and compilation of the program. It will then move a binary to `$GOPATH/bin`.
 ```Shell
 cd $GOPATH
@@ -48,7 +48,7 @@ go get -u github.com/<user_name>/<controller_repo>
 <binary_name> #Generally this is just <controller_repo>
 ```
 
-####Go Install
+#### Go Install
 **NOTE:** to use this method you must have instantiated `$GOBIN`. Check the Golang docs for more info on this variable.
 You can check if it's set by running `go env | grep GOBIN`
 ```Shell
@@ -57,60 +57,60 @@ go install
 <binary_name> #Generally this is just <controller_repo>
 ```
 
-#Commands
-###/all or /here
+# Commands
+### /all or /here
 `/all` or `/here` will notify all of the users that have registered in the channel.
 
-###/bless
+### /bless
 `/bless` is a special command that is reserved for the 'clergy' (a.k.a. the people ordained by the church of dude). It grants 3 points to the user of choice.
 
 Usage: `/bless <user>`
 
-###/curse
+### /curse
 `/curse` is another special command that is reserved for the 'clergy'. It takes 3 points from a user of choice.
 
 Usage: `/curse <user>`
 
-###/downvote
+### /downvote
 `/downvote` is the command to take points away from a user. You must provide a username for a person, but the reason for your downvote is optional.
 
 Usage: `/downvote <user> [<reason>]`
 
-###/hype
+### /hype
 `/hype` returns the most-hyped-up gif of 2016. You just have to see it to believe it.
 
-###/id
+### /id
 `id` can only be used in a personal chat. It will return your unique chat ID; this ID is helpful if you want to do work on your own instance of the bot.
 
-###/label
+### /label
 `/label` will attach a label to a user for that chat. This label can be displayed with the `/whois` command.
 
 Usage: `/label <user> <name>`
 
-###/score
+### /score
 `/score` will display the current score of everyone in the chat (ordered by points). If you provide the optional username parameter, it will output the specific reasons for that users score (again, ordered by points)
 
 Usage: `/score [<user>]`
 
-###/smawk or /me
+### /smawk or /me
 `/smawk` or `/me` is a special command that can only be executed from a private chat (and only by a member of SMÄWK). When run, it will print a message in the group chat in third-person.
 
 Usage: `/smawk <statement>`
 
 Example: `/smawk sighs` would output `<username> sighs` in the group chat.
 
-###/start
+### /start
 `/start` is used to start the bot in a chat (both group and personal). It is a command that is required by Telegram; when run, it will return a message to the chat if it started successfully.
 
-###/upvote
+### /upvote
 `/upvote` is the command to give a user points. A username is required for the command to work, and you are allowed to add an optional reason (should you desire)
 
 Usage: `/upvote <user> [<reason>]`
 
-###/version
+### /version
 `/version` will return the current version that the bot is running. This string can be useful for helping in debugging.
 
-###/whois
+### /whois
 `/whois` will return the label that has been assigned for that user.
 
 Usage: `/upvote <user>`
@@ -122,7 +122,7 @@ Any command will have an assigned controller function attached to it. These func
 
 If you wish to add a new feature, make a new branch and name it with the following sheme: `feature/<your_feature_name>`. You are welcome to add any feature you wish, as long as you follow the rules.
 
-###Feature Rules
+### Feature Rules
 1) **NEVER EVER EVER EVER EVER PUSH DIRECTLY TO MASTER.** When you are done with the feature (and have tested it sufficiently), submit a pull request; I will merge everything in, and make sure that it builds in production.
 
 2) If you add a new feature, please write sufficient unit tests for it (and place them inside `smawk_test.go`). See the [Testing](#testing) section for a little more info about writing unit tests.
@@ -139,5 +139,5 @@ Note: The results of the test command will be sent to the chat id specified by t
 
 For more info about testing, see the official Golang docs [here](https://golang.org/pkg/testing/).
 
-#Changelog
+# Changelog
 Changelog can be viewed [here](CHANGELOG.md)
