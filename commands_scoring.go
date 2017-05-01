@@ -79,7 +79,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) (
 
 	if len(cmd) == 1 {
 		// Create our query
-		users, err := db.Query("SELECT u.username, CASE WHEN SUM(s.point) IS NOT NULL THEN SUM(s.point) ELSE 0 END AS `points` FROM users u LEFT JOIN scores s ON s.user_id = u.id WHERE u.chat_id=? GROUP BY u.id ORDER BY `points` DESC",update.Message.Chat.ID)
+		users, err := db.Query("SELECT u.username, CASE WHEN SUM(s.point) IS NOT NULL THEN SUM(s.point) ELSE 0 END AS `points` FROM users u LEFT JOIN scores s ON s.user_id = u.id WHERE u.chat_id=? GROUP BY u.id ORDER BY `points` DESC, `username` ASC", update.Message.Chat.ID)
 		if err != nil {
 			log.Fatal(err)
 			return tgbotapi.Message{}, nil
@@ -106,7 +106,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) (
 		return bot.API.Send(msg)
 	} else if len(cmd) == 2 {
 		var total_points sql.NullString
-		err = db.QueryRow("SELECT SUM(s.point) FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username=? AND s.chat_id=?", cmd[1],strconv.FormatInt(update.Message.Chat.ID,10)).Scan(&total_points)
+		err = db.QueryRow("SELECT SUM(s.point) FROM scores s JOIN users u ON s.user_id = u.id WHERE u.username=? AND s.chat_id=?", cmd[1],update.Message.Chat.ID).Scan(&total_points)
 		if err != nil {
 			log.Fatal(err)
 			return tgbotapi.Message{}, nil
@@ -118,7 +118,7 @@ func (bot *SmawkBot) ExecuteScoreCommand(update tgbotapi.Update, cmd []string) (
 
 		msg_string := cmd[1]+" has "+total_points.String+" points, of which:\n"
 
-		users, err := db.Query("SELECT SUM(s.point) as points, s.reason FROM scores s JOIN users u ON s.user_id = u.id WHERE s.chat_id = "+strconv.FormatInt(update.Message.Chat.ID,10)+" AND u.username = '"+cmd[1]+"' GROUP BY s.reason")
+		users, err := db.Query("SELECT SUM(s.point) as points, s.reason FROM scores s JOIN users u ON s.user_id = u.id WHERE s.chat_id=? AND u.username=? GROUP BY s.reason", update.Message.Chat.ID, cmd[1])
 		if err != nil {
 			log.Fatal(err)
 			return tgbotapi.Message{}, nil

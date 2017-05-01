@@ -9,5 +9,4 @@
 - upvote downvote handle better
 - Meme bot
 - Help
-- on score tie order by username
 - fix no score
