@@ -1,4 +1,4 @@
-#This file contains features / fixes that I would like to do.
+# This file contains features / fixes that I would like to do.
 
 - Allow bot usage in separate channels
 	- User Registration
@@ -9,3 +9,5 @@
 - upvote downvote handle better
 - Meme bot
 - Help
+- on score tie order by username
+- fix no score

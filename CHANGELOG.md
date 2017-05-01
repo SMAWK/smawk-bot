@@ -1,7 +1,7 @@
 # Formatting
 Please use the following format when you update the changelog:
 ```
-###<version> - <release date (yyyy-mm-dd)>
+### <version> - <release date (yyyy-mm-dd)>
 - Item 1
 - Item 2
 - ...
