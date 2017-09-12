@@ -8,6 +8,9 @@ Please use the following format when you update the changelog:
 ```
 
 # Changelog
+### v2.1.0
+- Adds `today` command
+
 ### v2.0.0-beta
 - VERSION 2.0.0!!!! (a.k.a. let's do this again)
 - Refactors Library Codebase

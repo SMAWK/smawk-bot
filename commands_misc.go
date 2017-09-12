@@ -1,9 +1,11 @@
 package smawk
 
 import (
+	"github.com/mmcdole/gofeed"
 	"gopkg.in/telegram-bot-api.v4"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // ExecuteIDCommand returns the ID of a chat to the person that called this command.
@@ -71,6 +73,30 @@ func (bot *SmawkBot) ExecuteSMAWKCommand(update tgbotapi.Update, cmd []string) (
 func (bot *SmawkBot) ExecuteStartCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
 	// Create our message and send it to the chat that started the bot.
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Lo, the official SMÄWKBot rises!")
+
+	// Send the message
+	return bot.API.Send(msg)
+}
+
+// ExecuteTodayCommand returns the date, and a little bit about today
+func (bot *SmawkBot) ExecuteTodayCommand(update tgbotapi.Update) (tgbotapi.Message, error) {
+	// Start and empty message
+	text := ""
+
+	// Get today's date
+	text += "Today is " + time.Now().Format("Monday, January 3, 2006\n")
+
+	// Get today's holidays
+	text += "Today's Holidays:\n"
+
+	fp := gofeed.NewParser()
+	holidays, _ := fp.ParseURL("https://www.checkiday.com/rss.php?tz=America/New_York")
+	for _, holiday := range holidays.Items {
+		text += holiday.Title + "\n"
+	}
+
+	// Build the message
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
 
 	// Send the message
 	return bot.API.Send(msg)

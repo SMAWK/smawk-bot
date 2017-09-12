@@ -17,7 +17,8 @@ const (
 	SMAWKToken = "249930361:AAHz1Gksb-eT0SQG47lDb7WbJxujr7kGCkU"
 	ChatID = 55997207
 	SMAWKChatID = -9125034
-	Version = "2.0.0"
+	Version = "2.1.0"
+	DBPassword = "SM@WKisGR8"
 )
 
 /* ================================================ */
@@ -127,10 +128,21 @@ func TestBot(t *testing.T) {
 	}
 	fmt.Println("done")
 
+	/** === Today Command === **/
+	fmt.Print(timestamp()+"Running /today tests.... ")
+	upd = GenerateUpdate("/today")
+	msg,err := bot.ParseAndExecuteUpdate(upd)
+
+	if err != nil {
+		log.Fatal(err)
+		t.FailNow();
+	}
+	fmt.Println("done")
+
 	/** === ID Command === **/
 	fmt.Print(timestamp()+"Running /id tests.... ")
 	upd = GenerateUpdate("/id")
-	msg,err := bot.ParseAndExecuteUpdate(upd)
+	msg,err = bot.ParseAndExecuteUpdate(upd)
 
 	if err != nil {
 		log.Fatal(err)

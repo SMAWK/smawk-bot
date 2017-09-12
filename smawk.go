@@ -16,7 +16,7 @@ type SmawkBot struct {
 }
 
 const (
-	botVersion = "2.0.0"
+	botVersion = "2.1.0"
 )
 
 // Connect takes a provided access token, and returns a pointer
@@ -107,6 +107,8 @@ func (bot *SmawkBot) ParseAndExecuteUpdate(update tgbotapi.Update) (interface{},
 				return bot.ExecuteStartCommand(update)
 			case "/version":
 				return bot.ExecuteVersionCommand(update)
+			case "/today":
+				return bot.ExecuteTodayCommand(update)
 
 			/* ====== Notification ====== */
 			case "/all", "/here":
