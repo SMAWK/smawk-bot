@@ -84,7 +84,7 @@ func (bot *SmawkBot) ExecuteTodayCommand(update tgbotapi.Update) (tgbotapi.Messa
 	text := ""
 
 	// Get today's date
-	text += "Today is " + time.Now().Format("Monday, January 3, 2006\n")
+	text += "Today is " + time.Now().Format("Monday, January 2, 2006\n")
 
 	// Get today's holidays
 	text += "Today's Holidays:\n"
