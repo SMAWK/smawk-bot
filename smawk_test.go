@@ -18,7 +18,6 @@ const (
 	ChatID = 55997207
 	SMAWKChatID = -9125034
 	Version = "2.1.0"
-	DBPassword = "SM@WKisGR8"
 )
 
 /* ================================================ */
